@@ -33,6 +33,12 @@ body {
     margin-bottom: 5px;
 }
 
+.notif {
+    border: black solid 2px;
+    text-align: center;
+    padding: 10px
+}
+
 p, li {
     font-size: 18px;
 }
