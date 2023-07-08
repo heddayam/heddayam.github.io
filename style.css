@@ -36,7 +36,12 @@ body {
 .notif {
     border: black solid 2px;
     text-align: center;
-    padding: 10px
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.notif p {
+    margin-bottom:0px;
 }
 
 p, li {
