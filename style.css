@@ -7,7 +7,7 @@ body {
     /* margin-top:50px; */
 }
 
-.content {
+.flex_content {
     display: flex;
     flex-direction: row-reverse;
 }
@@ -27,6 +27,10 @@ body {
 
 #contact {
     margin-top: 30px;
+}
+
+#paper_info {
+    margin-bottom: 5px;
 }
 
 p, li {
@@ -57,7 +61,7 @@ a:hover {
 }
 
 @media only screen and (max-width: 900px) {
-    .content {
+    .flex_content {
         flex-direction: column;
     }
 
