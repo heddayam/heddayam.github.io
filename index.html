@@ -13,9 +13,17 @@
     <div class="flex_content">
         <section id="headshot">
             <img id="headshot_img" src="headshot3_edited.png">
-            <p>[<a href="https://www.linkedin.com/in/mourad-heddaya-432800b2/">LinkedIn</a>]</p>
+            <p>
+                <a href="mailto:mourad@uchicago.edu">mourad@uchicago.edu</a>
+            </p>
+            <p>
+                [<a href="docs/MHedddaya_CV_2024-11-01.pdf" target="_blank">CV</a>]
+                [<a href="https://www.linkedin.com/in/mourad-heddaya-432800b2/" target="_blank">LinkedIn</a>]
+            </p>
+            
         </section>
-        <section id="intro">
+        <section id="info">
+            <div id="intro">
             <p>
                 I am a fourth-year PhD student in the Department of Computer Science at the University of Chicago studying natural language processing. 
                 I am advised by <a href="https://chenhaot.com">Chenhao Tan</a> and am a member of the <a href="https://ci.cs.uchicago.edu">Communication & Intelligence</a> and <a href="https://chicagohai.github.io/">Chicago Human+AI</a> labs. 
@@ -33,7 +41,7 @@
                 Recently, I've worked on <a href="https://mheddaya.com/research/bargaining/">understanding how language shapes bilateral bargaining</a>.
             </p>
             <p>
-                Last summer, I interned at AWS AI Labs working on developing more efficient methods for LLM alignment.
+                Previously, I've interned at AWS AI Labs working on developing more efficient methods for LLM alignment.
             </p>
             <!-- <p>
                 A few research questions/topics I am currently working on:
@@ -48,11 +56,69 @@
                 I received my bachelor's degree at the University of Washington. 
                 After graduating, I spent a couple years as a member of <a href="https://nasmith.github.io">Noah Smith</a>'s research group, <a href="https://noahs-ark.github.io/">Noah's ARK</a>.
             </p>
-            <p id="contact">
+            <!-- <p id="contact">
                 Please <b>email</b> me at: <a href="mailto:mourad@uchicago.edu">mourad@uchicago.edu</a><br>
                 You can usually find me on campus in <a href="https://www.google.com/maps/place/John+Crerar+Library/@41.790524,-87.602854,15z/data=!4m5!3m4!1s0x0:0xcf45cf3ba1a46e95!8m2!3d41.790524!4d-87.602854">John Crerar Library</a> (JCL)
-            </p>
+            </p> -->
+        </div>
         </section>
+    </div>
+    <div id="pubs">
+        <h2>Publications</h2>
+        <div class="publication">
+            <div class="pub-list-title"><a href="https://arxiv.org/abs/2501.00097" target="_blank">CaseSumm: A Large-Scale Dataset for Long-Context Summarization from U.S. Supreme Court Opinions</a></div>
+            <div class="pub-list-details">
+                Mourad Heddaya, Kyle MacMillan, Anup Malani, Hongyuan Mei, Chenhao Tan.<br>
+                <i>arXiv, 2024. Under Review at <a href="https://2025.naacl.org">NAACL 2025</a>.</i>
+            </div>
+            <div class="publication-links">
+                <a href="research/legal-summarization/heddaya2024casesummlargescaledatasetlongcontext.arxiv2024.bib" target="_blank">[bib]</a>
+                <a href="https://huggingface.co/datasets/ChicagoHAI/CaseSumm" target="_blank">[data]</a>
+                <a href="#" class="toggle-abstract">[abstract]</a>
+                <div class="pub-list-abstract hidden">
+                    <p>
+                        This paper introduces CaseSumm, a novel dataset for long-context summarization in the legal domain that addresses the need for longer and more complex datasets for summarization evaluation. We collect 25.6K U.S. Supreme Court (SCOTUS) opinions and their official summaries, known as "syllabuses." Our dataset is the largest open legal case summarization dataset, and is the first to include summaries of SCOTUS decisions dating back to 1815.
+                        <br>
+                        We also present a comprehensive evaluation of LLM-generated summaries using both automatic metrics and expert human evaluation, revealing discrepancies between these assessment methods. Our evaluation shows Mistral 7b, a smaller open-source model, outperforms larger models on most automatic metrics and successfully generates syllabus-like summaries. In contrast, human expert annotators indicate that Mistral summaries contain hallucinations. The annotators consistently rank GPT-4 summaries as clearer and exhibiting greater sensitivity and specificity. Further, we find that LLM-based evaluations are not more correlated with human evaluations than traditional automatic metrics. Furthermore, our analysis identifies specific hallucinations in generated summaries, including precedent citation errors and misrepresentations of case facts. These findings demonstrate the limitations of current automatic evaluation methods for legal summarization and highlight the critical role of human evaluation in assessing summary quality, particularly in complex, high-stakes domains.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="publication">
+            <div class="pub-list-title"><a href="https://aclanthology.org/2024.wnu-1.12/" target="_blank">Causal Micro-Narratives</a></div>
+            <div class="pub-list-details">
+                Mourad Heddaya, Qingcheng Zeng, Chenhao Tan, Rob Voigt, Alexander Zentefis.<br>
+                <i>In <a href="https://sites.google.com/cs.stonybrook.edu/wnu2024" target="_blank">EMNLP Workshop on Narrative Understanding (WNU)</a>, 2024.</i>
+            </div>
+            <div class="publication-links">
+                <a href="research/narratives/heddaya-etal-2024-causal.wnu2024.bib" target="_blank">[bib]</a>
+                <!-- <a href="link_to_code" target="_blank">[code]</a> -->
+                <a href="#" class="toggle-abstract">[abstract]</a>
+                <div class="pub-list-abstract hidden">
+                    <p>
+                        We present a novel approach to classify <i>causal micro-narratives</i> from text. These narratives are sentence-level explanations of the cause(s) and/or effect(s) of a target subject. The approach requires only a subject-specific ontology of causes and effects, and we demonstrate it with an application to inflation narratives. Using a human-annotated dataset spanning historical and contemporary US news articles for training, we evaluate several large language models (LLMs) on this multi-label classification task. The best-performing model---a fine-tuned Llama 3.1 8B---achieves F1 scores of 0.87 on narrative detection and 0.71 on narrative classification. Comprehensive error analysis reveals challenges arising from linguistic ambiguity and highlights how model errors often mirror human annotator disagreements. This research establishes a framework for extracting causal micro-narratives from real-world data, with wide-ranging applications to social science research.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="publication">
+            <div class="pub-list-title"><a href="https://aclanthology.org/2023.acl-long.735/" target="_blank">Language of Bargaining</a></div>
+            <div class="pub-list-details">
+                Mourad Heddaya, Solomon Dworkin, Chenhao Tan, Rob Voigt, Alexander Zentefis.<br>
+                <i>In <a href="https://2023.aclweb.org" target="_blank">Annual Meeting of the Association for Computational Linguistics (ACL)</a>, 2023.</i>
+            </div>
+            <div class="publication-links">
+                <a href="research/narratives/heddaya-etal-2024-causal.wnu2024.bib" target="_blank">[bib]</a>
+                <a href="https://huggingface.co/datasets/ChicagoHAI/language-of-bargaining" target="_blank">[data]</a>
+                <a href="#" class="toggle-abstract">[abstract]</a>
+                <div class="pub-list-abstract hidden">
+                    <p>
+                        Leveraging an established exercise in negotiation education, we build a novel dataset for studying how the use of language shapes bilateral bargaining. Our dataset extends existing work in two ways: 1) we recruit participants via behavioral labs instead of crowdsourcing platforms and allow participants to negotiate through audio, enabling more naturalistic interactions; 2) we add a control setting where participants negotiate only through alternating, written numeric offers. Despite the two contrasting forms of communication, we find that the average agreed prices of the two treatments are identical. But when subjects can talk, fewer offers are exchanged, negotiations finish faster, the likelihood of reaching agreement rises, and the variance of prices at which subjects agree drops substantially. We further propose a taxonomy of speech acts in negotiation and enrich the dataset with annotated speech acts. We set up prediction tasks to predict negotiation success and find that being reactive to the arguments of the other party is advantageous over driving the negotiation.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
     </div>
   </body>
 </html>
