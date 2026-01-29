@@ -1,0 +1,8 @@
+@inproceedings{
+  shah2025llm,
+  title={{LLM} Rationalis? Measuring bargaining capabilities of {AI} negotiators},
+  author={Cheril Shah and Akshit Agarwal and Kanak Garg and Mourad Heddaya},
+  booktitle={First Workshop on Multi-Turn Interactions in Large Language Models},
+  year={2025},
+  url={https://openreview.net/forum?id=Ui0mNJzfSC}
+}

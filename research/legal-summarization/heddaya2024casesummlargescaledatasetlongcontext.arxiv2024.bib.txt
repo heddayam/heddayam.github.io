@@ -1,9 +1,20 @@
-@misc{heddaya2024casesummlargescaledatasetlongcontext,
-      title={CaseSumm: A Large-Scale Dataset for Long-Context Summarization from U.S. Supreme Court Opinions}, 
-      author={Mourad Heddaya and Kyle MacMillan and Anup Malani and Hongyuan Mei and Chenhao Tan},
-      year={2024},
-      eprint={2501.00097},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2501.00097}, 
+@inproceedings{heddaya-etal-2025-casesumm,
+    title = "{C}ase{S}umm: A Large-Scale Dataset for Long-Context Summarization from {U}.{S}. {S}upreme {C}ourt Opinions",
+    author = "Heddaya, Mourad  and
+      MacMillan, Kyle  and
+      Mei, Hongyuan  and
+      Tan, Chenhao  and
+      Malani, Anup",
+    editor = "Chiruzzo, Luis  and
+      Ritter, Alan  and
+      Wang, Lu",
+    booktitle = "Findings of the Association for Computational Linguistics: NAACL 2025",
+    month = apr,
+    year = "2025",
+    address = "Albuquerque, New Mexico",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2025.findings-naacl.102/",
+    doi = "10.18653/v1/2025.findings-naacl.102",
+    pages = "1917--1942",
+    ISBN = "979-8-89176-195-7",
 }
