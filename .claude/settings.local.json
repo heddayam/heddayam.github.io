@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:scholar.google.com)",
+      "WebFetch(domain:dblp.org)",
+      "WebSearch"
+    ]
+  }
+}

@@ -1,0 +1,135 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+
+% Section formatting - line underneath
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+% No page numbers
+\pagestyle{empty}
+
+% Hyperlink styling
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+% Custom list for bullet points with dashes
+\newlist{cvitems}{itemize}{1}
+\setlist[cvitems]{label=$-$, leftmargin=2em, topsep=2pt, itemsep=1pt, parsep=0pt}
+
+\begin{document}
+
+% Header
+\noindent{\LARGE\bfseries Mourad Heddaya}\\[4pt]
+\noindent\href{mailto:mourad@uchicago.edu}{mourad@uchicago.edu} $|$ \href{https://mheddaya.com}{mheddaya.com} $|$ 425-753-5800
+
+%% Research Interests
+\vspace{6pt}
+\noindent My research focuses on open-ended problems in language where there is no clear ground truth. I study how to evaluate and measure language in these settings, and how to design AI interventions that help people reason and make better decisions.
+
+%% Education
+\section*{Education}
+
+\textbf{Ph.D. Student in Computer Science}, 2021-,\\
+\hspace*{2em}\textit{Expected Graduation May 2026.}\\
+\hspace*{2em}\textit{University of Chicago, Chicago, IL.}\\
+\hspace*{2em}\textit{Advisor: Chenhao Tan}
+
+\vspace{6pt}
+
+\textbf{B.S. in Informatics}, 2015-2019,\\
+\hspace*{2em}\textit{University of Washington, Seattle, WA.}\\
+\hspace*{2em}\textit{Research Supervisor: Noah Smith \& Mari Ostendorf}
+
+%% Publications
+\section*{Publications}
+
+{[Measuring and evaluating language in open-ended settings.]}
+\begin{cvitems}
+    \item \href{https://arxiv.org/abs/2501.00097}{\textit{CaseSumm: A Large-Scale Dataset for Long-Context Summarization from U.S. Supreme Court Opinions}}. \textbf{Mourad Heddaya}, K.\ MacMillan, Hongyuan Mei, Chenhao Tan, A.\ Malani.\\
+    NAACL 2025 Findings. Accepted with talk at \href{https://alea2024.github.io/}{ALEA 2024}.
+    \item \href{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5259107}{\textit{A Century of Inflation Narratives}}. \textbf{Mourad Heddaya}, Chenhao Tan, R.\ Voigt, Q.\ Zeng, A.\ Zentefis.\\
+    SSRN Working Paper, 2025.
+    \item \href{https://aclanthology.org/2024.wnu-1.12/}{\textit{Causal Micro-Narratives}}. \textbf{Mourad Heddaya}, Q.\ Zeng, R.\ Voigt, A.\ Zentefis, Chenhao Tan.\\
+    EMNLP 2024 Workshop on Narrative Understanding.
+    \item \href{https://aclanthology.org/2023.acl-long.735/}{\textit{Language of Bargaining}}. \textbf{Mourad Heddaya}, S.\ Dworkin, R.\ Voigt, A.\ Zentefis, Chenhao Tan.\\
+    ACL 2023 Main Conference.
+    \item \href{https://neurips.cc/virtual/2025/loc/san-diego/128019}{\textit{LLM Rationalis? Measuring Bargaining Capabilities of AI Negotiators}}. C.\ Shah, A.\ Agarwal, K.\ Garg, \textbf{Mourad Heddaya}.\\
+    NeurIPS 2025 Workshop on Multi-Turn Interactions in LLMs.
+\end{cvitems}
+
+\vspace{4pt}
+{[Improving language model reasoning.]}
+\begin{cvitems}
+    \item \href{https://mheddaya.com/papers/acl2026_abridge.pdf}{\textit{When Internalization Fails: Finding Better Targets for Reasoning Compression}}. \textbf{Mourad Heddaya}, R.\ Wadhawan, M.\ Roberts, Chenhao Tan.\\
+    Under review at ACL 2026.
+\end{cvitems}
+
+%% Internships
+\section*{Internships}
+
+\textbf{Research Scientist Intern at Abridge}, Summer 2025.\\
+\hspace*{2em}\textit{San Francisco, CA.}
+\begin{cvitems}
+    \item Worked on reasoning compression for language models.
+\end{cvitems}
+
+\vspace{6pt}
+
+\textbf{Applied Scientist at Amazon AWS AI Labs}, Summer 2023.\\
+\hspace*{2em}\href{https://aws.amazon.com/bedrock/}{\textit{Bedrock Team}}, \textit{JFK 14, New York City, NY.}\\
+\hspace*{2em}\textit{Mentor: Miguel Ballesteros}
+\begin{cvitems}
+    \item Proposed self-supervised alignment, an efficient method for aligning LLMs to human preferences for summarization and toxicity without RLHF (without RL and with less human feedback).
+    \item Allow the model to score its own hypotheses (sampled sentences) and incorporate it as self-feedback in the SFT loop, providing more effective regularization for better alignment.
+    \item Project outcome: delivered internal technical report, documented code, and presentation.
+\end{cvitems}
+
+% %% Additional Research Experiences
+% \section*{Additional Research Experiences}
+%
+% \textbf{Research Engineer}, University of Washington, 2020-2021,\\
+% \hspace*{2em}\textit{Advisors: Noah Smith, Mari Ostendorf}
+% \begin{cvitems}
+%     \item Project outcome: \href{https://arxiv.org/abs/2205.12967}{Unsupervised Learning of Hierarchical Conversation Structure}
+%     \item Industry collaboration designing and developing unsupervised \& supervised information extraction systems to model noisy real-world conversational speech data.
+%     \item Based on learned topology from unsupervised HMM, identified distinct conversation paths corresponding to low \& high customer service issue resolution, providing insight into successful vs unsuccessful interactions. Final methods and analyses delivered to industry partner.
+% \end{cvitems}
+
+%% Invited Talks
+\section*{Invited Talks}
+
+\textbf{Freestone Grove Partners},\\
+\hspace*{2em}\textit{April 2025}\\
+\hspace*{2em}\textit{Talk Topic: Causal Micro-Narratives}
+
+\vspace{6pt}
+
+\textbf{Max Planck Institute for Research on Collective Goods},\\
+\hspace*{2em}\textit{Research Group Engel, February 2025}\\
+\hspace*{2em}\textit{Talk Topic: NLP In the Legal Domain (summarization, reasoning, etc). Talk to occur in early 2025.}
+
+\vspace{6pt}
+
+\textbf{University of Chicago},\\
+\hspace*{2em}\textit{Language Evolution Acquisition \& Processing Workshop (LEAP), January 2023}\\
+\hspace*{2em}\textit{Talk Title: Language of Bargaining}
+
+%% Teaching
+\section*{Teaching}
+
+\textbf{University of Chicago},\\
+\hspace*{2em}\textit{CMSC 25400 -- Machine Learning, Winter 2023}\\
+\hspace*{2em}\textit{CMSC 25300 / 35300 -- Mathematical Foundation of Machine Learning, Fall 2022}\\
+\hspace*{2em}\textit{CMSC 35100 - Natural Language Processing, Winter 2022}
+
+\end{document}

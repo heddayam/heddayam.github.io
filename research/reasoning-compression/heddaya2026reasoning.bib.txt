@@ -1,0 +1,6 @@
+@article{heddaya2026reasoning,
+  title={When Internalization Fails: Finding Better Targets for Reasoning Compression},
+  author={Heddaya, Mourad and Wadhawan, Rohan and Roberts, Manley and Tan, Chenhao},
+  year={2026},
+  note={Under review at ACL 2026}
+}

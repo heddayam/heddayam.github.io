@@ -15,27 +15,21 @@
             <!-- <img id="headshot_img" src="headshot3_edited.png"> -->
             <img id="headshot_img" src="headshot_reg.png">
             <p>
-                <a href="mailto:mourad@uchicago.edu">mourad@uchicago.edu</a>
+                <a href="#pubs">Publications</a><br>
+                <a href="#talks">Invited Talks</a><br>
+                <a href="docs/cv.pdf" target="_blank">CV</a><br>
+                <a href="https://www.linkedin.com/in/mourad-heddaya-432800b2/" target="_blank">LinkedIn</a>
             </p>
-            <p>
-                [<a href="docs/MHedddaya_CV_latest.pdf" target="_blank">CV</a>]
-                [<a href="https://www.linkedin.com/in/mourad-heddaya-432800b2/" target="_blank">LinkedIn</a>]
-            </p>
-            
         </section>
         <section id="info">
             <div id="intro">
             <p>
-                I am a fourth-year PhD student in the Department of Computer Science at the University of Chicago studying natural language processing. 
-                I am advised by <a href="https://chenhaot.com">Chenhao Tan</a> and am a member of the <a href="https://ci.cs.uchicago.edu">Communication & Intelligence</a> and <a href="https://chicagohai.github.io/">Chicago Human+AI</a> labs. 
+                I am a PhD candidate in the Department of Computer Science at the University of Chicago working on language models and AI. <b>I am graduating in May 2026 and am on the job market for industry positions</b>.
+                I am advised by <a href="https://chenhaot.com">Chenhao Tan</a> and am a member of the <a href="https://ci.cs.uchicago.edu">Communication & Intelligence</a> and <a href="https://chicagohai.github.io/">Chicago Human+AI</a> labs.
             </p>
             <p>
-                My research interests include:
-                <ul>
-                    <li>Building and evaluating the abilities of NLP systems, such as language models, to model messy, complex, and unusual real-world data.</li>
-                    <li>Developing models with perspective to more effectively resolve natural ambiguity and better serve people.</li>
-                </ul>
-<!--             
+                My research focuses on open-ended problems in language where there is no clear ground truth. I study how to evaluate and measure language in these settings, and how to design AI interventions that help people reason and make better decisions.
+<!--
                 <ul>
                     <li><a href="https://mheddaya.com/research/narratives/">Identifying and modeling the spread and impact of economic narratives.</a></li>
                     <li><a href="https://mheddaya.com/research/legal-summarization/">Long-document reasoning and summarization in the legal domain.</a></li>
@@ -45,7 +39,14 @@
                 Recently, I've worked on <a href="https://mheddaya.com/research/bargaining/">understanding how language shapes bilateral bargaining</a>.
             </p> -->
             <p>
-                Previously, I've interned at AWS AI Labs working on developing more efficient methods for LLM alignment.
+                Ongoing work:
+                <ul>
+                    <li>AI-assisted deliberation: designing AI interactions that can help people better reason about complex decisions and communicate their beliefs effectively.</li>
+                    <li>Productive friction in AI dialogue: training LLMs that are promote critical thinking rather than reinforcing and capitulate to existing beliefs.</li>
+                </ul>
+            </p>
+            <p>
+                Previously, I've interned at <a href="https://www.abridge.com">Abridge</a> working on <a href="papers/acl2026_abridge.pdf">reasoning compression</a> and at <a href="https://labs.amazon.science" target="_blank">AWS AI Labs</a> working on developing more efficient methods for LLM alignment.
             </p>
             <!-- <p>
                 A few research questions/topics I am currently working on:
@@ -59,6 +60,9 @@
             <p>
                 I received my bachelor's degree at the University of Washington, where I conducted research in <a href="https://nasmith.github.io">Noah Smith</a>'s research group, <a href="https://noahs-ark.github.io/">Noah's ARK</a>.
             </p>
+            <p>
+                Reach me at <a href="mailto:mourad@uchicago.edu">mourad@uchicago.edu</a>.
+            </p>
             <!-- <p id="contact">
                 Please <b>email</b> me at: <a href="mailto:mourad@uchicago.edu">mourad@uchicago.edu</a><br>
                 You can usually find me on campus in <a href="https://www.google.com/maps/place/John+Crerar+Library/@41.790524,-87.602854,15z/data=!4m5!3m4!1s0x0:0xcf45cf3ba1a46e95!8m2!3d41.790524!4d-87.602854">John Crerar Library</a> (JCL)
@@ -69,10 +73,57 @@
     <div id="pubs">
         <h2>Publications</h2>
         <div class="publication">
-            <div class="pub-list-title"><a href="https://arxiv.org/abs/2501.00097" target="_blank">CaseSumm: A Large-Scale Dataset for Long-Context Summarization from U.S. Supreme Court Opinions</a></div>
+            <div class="pub-list-title"><a href="papers/acl2026_abridge.pdf" target="_blank">When Internalization Fails: Finding Better Targets for Reasoning Compression</a></div>
+            <div class="pub-list-details">
+                <strong>Mourad Heddaya</strong>, Rohan Wadhawan, Manley Roberts, Chenhao Tan.<br>
+                <i>Under review at <a href="https://2026.aclweb.org" target="_blank">ACL 2026</a>.</i>
+            </div>
+            <div class="publication-links">
+                <a href="#" class="toggle-abstract">[abstract]</a>
+                <div class="pub-list-abstract hidden">
+                    <p>
+                        Reasoning language models generate long reasoning traces that increase latency and cost. We study how to shorten these traces while preserving accuracy on competition-level mathematics. We compare three approaches in a teacher-student distillation setup: (i) inference-time truncation after the first k tokens; (ii) Implicit Chain-of-Thought (ICoT)-style curricula that progressively shorten the teacher trace during training; and (iii) direct distillation to shorter reasoning traces. We find: (1) with standard SFT and first-k truncation, models compensate by generating longer text after reasoning, undermining token savings; (2) ICoT-style curricula provide little benefit on competition-level mathematics with long, diverse reasoning traces; and (3) training on post-think (text the teacher generates after reasoning) outperforms generic summaries by 4&ndash;5 percentage points at matched token budgets. These results show that curriculum-based methods that are effective on simple tasks do not transfer to complex reasoning, while post-think provides a better distillation target because it preserves the teacher's solution path.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="publication">
+            <div class="pub-list-title"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5259107" target="_blank">A Century of Inflation Narratives</a></div>
+            <div class="pub-list-details">
+                <strong>Mourad Heddaya</strong>, Chenhao Tan, Rob Voigt, Qingcheng Zeng, Alexander Zentefis.<br>
+                <i>SSRN Working Paper, 2025.</i>
+            </div>
+            <div class="publication-links">
+                <a href="research/inflation-narratives/heddaya2025inflation.bib.txt" target="_blank">[bib]</a>
+                <a href="#" class="toggle-abstract">[abstract]</a>
+                <div class="pub-list-abstract hidden">
+                    <p>
+                        We conduct a large-scale, century-spanning analysis of U.S. inflation narratives by applying natural language processing methods to American newspapers published from 1923 to 2025. We analyze 4.2 million sentences, documenting significant shifts in narrative prevalence across economic eras. We find that fiscal explanations dominated pre-1980 discussion, while monetary and supply-side factors gained prominence thereafter. We also find sharp regional differences, with Northern papers emphasizing fiscal causes while Southern papers focus on supply factors and interest rate effects. We examine narrative diffusion, finding evidence that newspapers engage in narrative differentiation from local competitors while simultaneously experiencing contagion effects from more distant sources. Narrative framing also predicts heterogeneity in both short- and long-term consumer inflation expectations across income and education groups, with these effects in some cases exceeding the predictive power of realized inflation itself.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="publication">
+            <div class="pub-list-title"><a href="https://neurips.cc/virtual/2025/loc/san-diego/128019" target="_blank">LLM Rationalis? Measuring Bargaining Capabilities of AI Negotiators</a></div>
+            <div class="pub-list-details">
+                Cheril Shah, Akshit Agarwal, Kanak Garg, <strong>Mourad Heddaya</strong>.<br>
+                <i>In <a href="https://neurips.cc/virtual/2025/workshop/109539" target="_blank">NeurIPS Workshop on Multi-Turn Interactions in LLMs</a>, 2025.</i>
+            </div>
+            <div class="publication-links">
+                <a href="research/llm-bargaining/shah2025llmrationalis.bib.txt" target="_blank">[bib]</a>
+                <a href="#" class="toggle-abstract">[abstract]</a>
+                <div class="pub-list-abstract hidden">
+                    <p>
+                        Bilateral negotiation is a complex, context-sensitive task in which human negotiators dynamically adjust anchors, pacing, and flexibility to exploit power asymmetries and informal cues. We introduce a unified mathematical framework for modeling concession dynamics based on a hyperbolic tangent curve, and propose two metrics&mdash;burstiness and the Concession-Rigidity Index (CRI)&mdash;to quantify the timing and rigidity of offer trajectories. We conduct a large-scale empirical comparison between human negotiators and four state-of-the-art large language models across natural-language and numeric-offers settings. Our results reveal that, unlike humans who smoothly adapt to situations and infer the opponent's position and strategies, LLMs systematically anchor at extremes of the possible agreement zone and optimize for fixed points irrespective of leverage or context. These findings highlight fundamental limitations in current LLM negotiation capabilities and point to the need for models that better internalize opponent reasoning and context-dependent strategy.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="publication">
+            <div class="pub-list-title"><a href="https://aclanthology.org/2025.findings-naacl.102/" target="_blank">CaseSumm: A Large-Scale Dataset for Long-Context Summarization from U.S. Supreme Court Opinions</a></div>
             <div class="pub-list-details">
                 <strong>Mourad Heddaya</strong>, Kyle MacMillan, Anup Malani, Hongyuan Mei, Chenhao Tan.<br>
-                <i>To Appear in <a href="https://2025.naacl.org">NAACL 2025</a> Findings.</i>
+                <i>In <a href="https://2025.naacl.org">NAACL 2025</a> Findings. Accepted with talk at <a href="https://alea2024.github.io/">ALEA 2024</a>.</i>
             </div>
             <div class="publication-links">
                 <a href="research/legal-summarization/heddaya2024casesummlargescaledatasetlongcontext.arxiv2024.bib.txt" target="_blank">[bib]</a>
@@ -108,7 +159,7 @@
             <div class="pub-list-title"><a href="https://aclanthology.org/2023.acl-long.735/" target="_blank">Language of Bargaining</a></div>
             <div class="pub-list-details">
                 <strong>Mourad Heddaya</strong>, Solomon Dworkin, Chenhao Tan, Rob Voigt, Alexander Zentefis.<br>
-                <i>In <a href="https://2023.aclweb.org" target="_blank">Annual Meeting of the Association for Computational Linguistics (ACL)</a>, 2023.</i>
+                <i>In <a href="https://2023.aclweb.org" target="_blank">ACL</a>, 2023.</i>
             </div>
             <div class="publication-links">
                 <a href="research/bargaining/heddaya-etal-2023-language.acl2023.bib.txt" target="_blank">[bib]</a>
@@ -121,7 +172,19 @@
                 </div>
             </div>
         </div>
-        
+
+    </div>
+    <div id="talks">
+        <h2>Invited Talks</h2>
+        <div class="talk">
+            <strong><a href="https://fgrovep.com/" target="_blank">Freestone Grove Partners</a></strong>, April 2025. <i>Causal Micro-Narratives.</i>
+        </div>
+        <div class="talk">
+            <strong><a href="https://www.coll.mpg.de/" target="_blank">Max Planck Institute for Research on Collective Goods</a></strong>, <a href="https://www.coll.mpg.de/24278/research-group-engel" target="_blank">Research Group Engel</a>, February 2025. <i>NLP In the Legal Domain.</i>
+        </div>
+        <div class="talk">
+            <strong><a href="https://voices.uchicago.edu/leap/" target="_blank">University of Chicago Language Evolution Acquisition &amp; Processing Workshop (LEAP)</a>, January 2023. <i>Language of Bargaining.</i>
+        </div>
     </div>
   </body>
 </html>
