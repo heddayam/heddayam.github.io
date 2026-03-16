@@ -35,8 +35,8 @@
 \hrule
 
 %% Research Summary
-% \vspace{12pt}
-% \noindent \textbf{}
+\vspace{12pt}
+\noindent \textbf{I develop post-training methods and evaluation frameworks for language models, focusing on problems where no clear ground truth exists. My work spans reasoning compression, preference-based alignment, and human-AI interaction. I focus on understanding when models fail, how to measure it, and how to design training and evaluation methods that work.}
 
 %% Education
 \section*{Education}
@@ -55,41 +55,33 @@
 \begin{enumerate}[label={[\arabic*]}, leftmargin=2em, topsep=2pt, itemsep=1pt, parsep=0pt]
     \item \textbf{M.\ Heddaya}, R.\ Wadhawan, M.\ Roberts, C.\ Tan. \href{https://mheddaya.com/papers/acl2026_abridge.pdf}{When Internalization Fails: Finding Better Targets for Reasoning Compression.} Under review, \textit{ACL 2026}.
     \item \textbf{M.\ Heddaya}, K.\ MacMillan, A.\ Malani, H.\ Mei, C.\ Tan. \href{https://arxiv.org/abs/2501.00097}{CaseSumm: A Large-Scale Dataset for Long-Context Summarization.} \textit{Findings of NAACL 2025}. \textit{Accepted with talk @ \href{https://alea2024.github.io/}{ALEA 2024}}.
+    \item \textbf{M.\ Heddaya}, S.\ Dworkin, C.\ Tan, R.\ Voigt, A.\ Zentefis. \href{https://aclanthology.org/2023.acl-long.735/}{Language of Bargaining.} \textit{ACL 2023}.
     \item \textbf{M.\ Heddaya}, C.\ Tan, R.\ Voigt, Q.\ Zeng, A.\ Zentefis. \href{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5259107}{A Century of Inflation Narratives.} \textit{SSRN 2025}.
     \item \textbf{M.\ Heddaya}, Q.\ Zeng, C.\ Tan, R.\ Voigt, A.\ Zentefis. \href{https://aclanthology.org/2024.wnu-1.12/}{Causal Micro-Narratives.} \textit{WNU @ EMNLP 2024}.
-    \item \textbf{M.\ Heddaya}, S.\ Dworkin, C.\ Tan, R.\ Voigt, A.\ Zentefis. \href{https://aclanthology.org/2023.acl-long.735/}{Language of Bargaining.} \textit{ACL 2023}.
 \end{enumerate}
 
 %% Research
 \section*{Research}
 \vspace{4pt}
 \noindent{\large\textbf{PhD Student, University of Chicago CS}} \hfill 2021--2026
-% \begin{cvitems}
-%     \item Showed that ICoT-style curricula for \textbf{reasoning compression} [1], effective on short traces, fail to internalize long reasoning in competition math; proposed post-think distillation, which preserves the teacher solution path and achieves the best accuracy--efficiency trade-off at matched token budgets.
-%     \item {[ongoing]} Built and deployed \href{https://civicchats.org}{CivicChats.org}, an AI platform for civic deliberation with a fully automated evaluation system (CivicEval); running a large-scale controlled experiment on voter understanding. \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{[blog]}
-%     \item Introduced \textbf{causal micro-narratives} [4] and classified 4.2M sentences from a century of U.S.\ inflation coverage [2]; found narratives predict consumer expectations and spread via contagion and differentiation.
-%     \item Built \textbf{CaseSumm} [3], a long-context benchmark of 25.6K Supreme Court opinion–summary pairs; showed automatic metrics diverge from expert judgment and fine-tuned models hallucinate in 20\% of summaries vs.\ near-zero for GPT-4.
-%     \item Collected $\sim$400 human \textbf{bargaining} interactions with real incentives [5]; language reduces price variance 3× and simple linguistic features outperform transformers at predicting outcomes.
-% \end{cvitems}
 \begin{cvitems}
-    \item {[ongoing]} Built and deployed \href{https://civicchats.org}{CivicChats.org}, an end-to-end AI platform for civic deliberation. Built CivicEval, an automated evaluation system whose outputs inform iterative prompt optimization over collected user data. Running a controlled experiment on voter understanding. Follow-up work on large-scale data curation, synthetic data generation, and training to elicit coherent attitudes in models beyond surface style. \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{[blog]}
-    \item Demonstrated that chain-of-thought internalization does not scale to complex reasoning [1]; proposed post-think distillation, a new compression target that preserves the teacher's solution path and achieves the best accuracy--efficiency trade-off on competition math.
-    \item Developed a method for at-scale automatic extraction of causal narratives and applied it to 4.2M sentences from a century of U.S.\ inflation coverage [3]; found causal narratives predict consumer expectations and spread via contagion and differentiation.
-    \item Built a 25.6K Supreme Court opinion--summary benchmark [2]; showed fine-tuning improves automatic metrics while increasing hallucination rate. Frontier models hallucinate less but more subtly, requiring expert review to detect. Neither standard metrics nor LLM-as-judge reliably catch these failures.
-    \item Collected $\sim$400 human \textbf{bargaining} interactions with real incentives [5]; language reduces price variance 3$\times$ and simple linguistic features outperform transformers at predicting outcomes.
+    \item Demonstrated that chain-of-thought internalization fails on complex reasoning [1]. Proposed post-think distillation, a new compression target that preserves the teacher's solution path and achieves the best accuracy--efficiency trade-off on competition math. Designed evaluation pipelines to diagnose failure modes across curriculum stages and distillation targets.
+    \item {[ongoing]} Built and deployed \href{https://civicchats.org}{CivicChats.org}, an end-to-end AI platform for civic deliberation. Built CivicEval, an automated evaluation pipeline whose outputs inform iterative prompt optimization over collected user data. Running a controlled experiment on voter understanding. Follow-up work on large-scale data curation, synthetic data generation, and preference-based training to elicit coherent model behavior beyond surface style. \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{[blog]}
+    \item Built a 25.6K Supreme Court opinion--summary benchmark [2] with an evaluation framework comparing automatic metrics, LLM-as-judge, and expert human review; showed fine-tuning improves automatic metrics while increasing hallucination rate. Neither standard metrics nor LLM-as-judge reliably catch subtle failures in frontier model outputs.
+    \item Developed a method for at-scale automatic extraction of causal narratives and applied it to 4.2M sentences from a century of U.S.\ inflation coverage [4]; found causal narratives predict consumer expectations and spread via contagion and differentiation.
+    \item Collected $\sim$400 human bargaining interactions with real incentives [3]; language reduces price variance 3$\times$ and simple linguistic features outperform transformers at predicting outcomes.
 \end{cvitems}
 
 \vspace{4pt}
 \noindent{\large\textbf{ML Research Scientist Intern, \href{https://www.abridge.com}{Abridge AI}}} \hfill Summer 2025
 \begin{cvitems}
-    \item Developed methods for \textbf{reasoning compression} [1] in language models, identifying when internalization fails and finding better targets for distilling reasoning.
+    \item Developed methods for \textbf{reasoning compression} [1] in language models, building evaluation infrastructure to systematically identify when internalization fails and finding better distillation targets.
 \end{cvitems}
 
 \vspace{4pt}
 \noindent{\large\textbf{Applied Scientist Intern, \href{https://aws.amazon.com/bedrock/}{Amazon AWS AI Labs (Bedrock)}}} \hfill Summer 2023
 \begin{cvitems}
-    \item Developed self-supervised alignment, a method for aligning LLMs to human preferences without RLHF, removing the need for reward models and reducing annotation requirements.
-    \item The model scores its own outputs and uses self-feedback during fine-tuning as a regularizer for alignment.
+    \item Developed a preference learning method for aligning LLMs without separate reward models or RL infrastructure; the model scores its own outputs to generate preference signals during fine-tuning, removing dependence on human annotation at every step while maintaining alignment quality.
 \end{cvitems}
 
 \vspace{4pt}
@@ -109,7 +101,7 @@
 %% Invited Talks
 \section*{Invited Talks}
 
-\href{https://fgrovep.com}{\textbf{Freestone Grove Partners}}, April 2025 --- Causal Micro-Narratives.
+\href{https://fgrovep.com}{\textbf{Freestone Grove Partners Investment Firm}}, April 2025 --- Causal Micro-Narratives.
 
 \vspace{4pt}
 
@@ -140,7 +132,7 @@
 \section*{Skills \& Methods}
 \begin{cvitems}
     \item \textbf{Technical:} Python, PyTorch, HuggingFace transformers/trl, LoRA/PEFT, vLLM, Node.js, PostgreSQL, full-stack development.
-    \item \textbf{Research:} LLM fine-tuning \& prompting, RLHF/alignment, experimental design, survey design, evaluation frameworks, large-scale text analysis.
+    \item \textbf{Research:} LLM post-training \& fine-tuning, reinforcement learning from human feedback, preference learning, distillation, evaluation design, experimental design, large-scale text analysis.
 \end{cvitems}
 
 \end{document}

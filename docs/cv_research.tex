@@ -6,7 +6,7 @@
 \usepackage{titlesec}
 \usepackage[T1]{fontenc}
 \usepackage{palatino}
-\linespread{1}
+\linespread{1.05}
 
 % Section formatting - line underneath
 \titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
@@ -35,8 +35,8 @@
 \hrule
 
 %% Research Summary
-% \vspace{12pt}
-% \noindent \textbf{}
+\vspace{12pt}
+\noindent \textbf{I'm interested in how we measure, evaluate, and design AI methods for open-ended problems where outcomes can be ambiguous and no clear ground truth exists. My work spans AI evaluation, reasoning, alignment, and human-AI interaction with applications across multiple domains.}
 
 %% Education
 \section*{Education}
@@ -64,19 +64,12 @@
 \section*{Research}
 \vspace{4pt}
 \noindent{\large\textbf{PhD Student, University of Chicago CS}} \hfill 2021--2026
-% \begin{cvitems}
-%     \item Showed that ICoT-style curricula for \textbf{reasoning compression} [1], effective on short traces, fail to internalize long reasoning in competition math; proposed post-think distillation, which preserves the teacher solution path and achieves the best accuracy--efficiency trade-off at matched token budgets.
-%     \item {[ongoing]} Built and deployed \href{https://civicchats.org}{CivicChats.org}, an AI platform for civic deliberation with a fully automated evaluation system (CivicEval); running a large-scale controlled experiment on voter understanding. \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{[blog]}
-%     \item Introduced \textbf{causal micro-narratives} [4] and classified 4.2M sentences from a century of U.S.\ inflation coverage [2]; found narratives predict consumer expectations and spread via contagion and differentiation.
-%     \item Built \textbf{CaseSumm} [3], a long-context benchmark of 25.6K Supreme Court opinion–summary pairs; showed automatic metrics diverge from expert judgment and fine-tuned models hallucinate in 20\% of summaries vs.\ near-zero for GPT-4.
-%     \item Collected $\sim$400 human \textbf{bargaining} interactions with real incentives [5]; language reduces price variance 3× and simple linguistic features outperform transformers at predicting outcomes.
-% \end{cvitems}
 \begin{cvitems}
-    \item {[ongoing]} Built and deployed \href{https://civicchats.org}{CivicChats.org}, an end-to-end AI platform for civic deliberation. Built CivicEval, an automated evaluation system whose outputs inform iterative prompt optimization over collected user data. Running a controlled experiment on voter understanding. Follow-up work on large-scale data curation, synthetic data generation, and training to elicit coherent attitudes in models beyond surface style. \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{[blog]}
     \item Demonstrated that chain-of-thought internalization does not scale to complex reasoning [1]; proposed post-think distillation, a new compression target that preserves the teacher's solution path and achieves the best accuracy--efficiency trade-off on competition math.
+    \item {[ongoing]} Built and deployed \href{https://civicchats.org}{\textbf{CivicChats.org}}, an AI platform for critical thinking \& civic deliberation with automated evaluation (CivicEval); running a large controlled experiment on ballot measure understanding. \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{[blog]}
     \item Developed a method for at-scale automatic extraction of causal narratives and applied it to 4.2M sentences from a century of U.S.\ inflation coverage [3]; found causal narratives predict consumer expectations and spread via contagion and differentiation.
-    \item Built a 25.6K Supreme Court opinion--summary benchmark [2]; showed fine-tuning improves automatic metrics while increasing hallucination rate. Frontier models hallucinate less but more subtly, requiring expert review to detect. Neither standard metrics nor LLM-as-judge reliably catch these failures.
-    \item Collected $\sim$400 human \textbf{bargaining} interactions with real incentives [5]; language reduces price variance 3$\times$ and simple linguistic features outperform transformers at predicting outcomes.
+    \item Built a 25.6K long-context understanding benchmark from Supreme Court opinion--summary [2]; showed automatic metrics diverge from expert judgment and fine-tuned models hallucinate more often than GPT-4, which hallucinates less but more subtly.
+    \item Collected $\sim$400 human bargaining interactions with real incentives [5]; language reduces price variance 3$\times$ and simple linguistic features outperform transformers at predicting outcomes.
 \end{cvitems}
 
 \vspace{4pt}
@@ -109,24 +102,15 @@
 %% Invited Talks
 \section*{Invited Talks}
 
-\href{https://fgrovep.com}{\textbf{Freestone Grove Partners}}, April 2025 --- Causal Micro-Narratives.
+\textbf{Freestone Grove Partners}, April 2025 --- Causal Micro-Narratives.
 
 \vspace{4pt}
 
-\href{https://www.coll.mpg.de}{\textbf{Max Planck Institute for Research on Collective Goods}}, February 2025 --- NLP in the Legal Domain.
+\textbf{Max Planck Institute for Research on Collective Goods}, February 2025 --- NLP in the Legal Domain.
 
 \vspace{4pt}
 
 \textbf{University of Chicago LEAP Workshop}, January 2023 --- Language of Bargaining.
-
-%% Service
-\section*{Service}
-
-\begin{cvitems}
-    \item \href{https://aclrollingreview.org}{ARR} Reviewer: June 2024, November 2024, October 2025, January 2026.
-    \item \href{https://ic2s2-2026.org}{IC2S2} Reviewer: 2022, 2023, 2024, 2025, 2026.
-    \item Program Committee, \href{https://datascience.uchicago.edu/events/human-ai-conference/}{Symposium on Human + AI}, Fall 2022.
-\end{cvitems}
 
 %% Teaching
 \section*{Teaching}
@@ -135,12 +119,5 @@
 \hspace*{2em}\textit{CMSC 25400 -- Machine Learning, Winter 2023}\\
 \hspace*{2em}\textit{CMSC 25300 / 35300 -- Mathematical Foundation of Machine Learning, Fall 2022}\\
 \hspace*{2em}\textit{CMSC 35100 -- Natural Language Processing, Winter 2022}
-
-%% Skills & Methods
-\section*{Skills \& Methods}
-\begin{cvitems}
-    \item \textbf{Technical:} Python, PyTorch, HuggingFace transformers/trl, LoRA/PEFT, vLLM, Node.js, PostgreSQL, full-stack development.
-    \item \textbf{Research:} LLM fine-tuning \& prompting, RLHF/alignment, experimental design, survey design, evaluation frameworks, large-scale text analysis.
-\end{cvitems}
 
 \end{document}
