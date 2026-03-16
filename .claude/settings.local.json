@@ -5,7 +5,21 @@
       "Bash(find:*)",
       "WebFetch(domain:scholar.google.com)",
       "WebFetch(domain:dblp.org)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(latexmk:*)",
+      "WebFetch(domain:substack.com)",
+      "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:aclanthology.org)",
+      "WebFetch(domain:papers.ssrn.com)",
+      "WebFetch(domain:job-boards.greenhouse.io)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:microsoft.ai)",
+      "WebFetch(domain:mustafa-suleyman.ai)",
+      "WebFetch(domain:science-latte.com)",
+      "WebFetch(domain:imagine.jhu.edu)",
+      "WebFetch(domain:zety.com)",
+      "WebFetch(domain:towardsai.net)",
+      "WebFetch(domain:resumeworded.com)"
     ]
   }
 }
