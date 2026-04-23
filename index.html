@@ -79,14 +79,14 @@
         <div class="publication">
             <div class="pub-list-title"><a href="papers/acl2026_abridge.pdf" target="_blank">When Internalization Fails: Finding Better Targets for Reasoning Compression</a></div>
             <div class="pub-list-details">
-                <strong>Mourad Heddaya</strong>, Rohan Wadhawan, Manley Roberts, Chenhao Tan.<br>
-                <i>Under review at <a href="https://2026.aclweb.org" target="_blank">ACL 2026</a>.</i>
+                <strong>Mourad Heddaya</strong>, Manley Roberts, Rohan Wadhawan, Chenhao Tan.<br>
+                <i>In <a href="https://2026.aclweb.org">ACL 2026</a> Findings.</i>
             </div>
             <div class="publication-links">
                 <a href="#" class="toggle-abstract">[abstract]</a>
                 <div class="pub-list-abstract hidden">
                     <p>
-                        Reasoning language models generate long reasoning traces that increase latency and cost. We study how to shorten these traces while preserving accuracy on competition-level mathematics. We compare three approaches in a teacher-student distillation setup: (i) inference-time truncation after the first k tokens; (ii) Implicit Chain-of-Thought (ICoT)-style curricula that progressively shorten the teacher trace during training; and (iii) direct distillation to shorter reasoning traces. We find: (1) with standard SFT and first-k truncation, models compensate by generating longer text after reasoning, undermining token savings; (2) ICoT-style curricula provide little benefit on competition-level mathematics with long, diverse reasoning traces; and (3) training on post-think (text the teacher generates after reasoning) outperforms generic summaries by 4&ndash;5 percentage points at matched token budgets. These results show that curriculum-based methods that are effective on simple tasks do not transfer to complex reasoning, while post-think provides a better distillation target because it preserves the teacher's solution path.
+                        Reasoning language models generate long reasoning traces that increase latency and cost. We study how to shorten these traces while preserving accuracy on competition-level mathematics. In a teacher-student distillation setup, we compare three approaches: (i) inference-time truncation after the first k tokens, (ii) Implicit Chain-of-Thought (ICoT)-style curricula that progressively shorten the teacher trace during training, and (iii) direct distillation to shorter reasoning traces. Using NuminaMath 1.5 with traces from DeepSeek-R1 and QwQ-32B, we distill into Qwen2.5-7B and measure accuracy against total tokens generated. We find: (1) with standard SFT and first-k truncation, models compensate by generating longer text after reasoning, undermining token savings; (2) ICoT-style curricula provide little benefit on competition-level mathematics, where reasoning traces are long and diverse; and (3) training on post-think, text the teacher generates after reasoning, achieves the best accuracy--efficiency trade-off among all shortened targets, outperforming generic summaries at matched token budgets. These results show that curriculum-based internalization methods effective on simple tasks do not transfer to complex reasoning, and that post-think provides a better distillation target.
                     </p>
                 </div>
             </div>
