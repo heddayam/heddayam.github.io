@@ -1,0 +1,158 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=0.7in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\linespread{1}
+
+% Section formatting - line underneath
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+% No page numbers
+\pagestyle{empty}
+
+% Hyperlink styling
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+% Custom list for bullet points with dashes
+\newlist{cvitems}{itemize}{1}
+\setlist[cvitems]{label=$-$, leftmargin=2em, topsep=2pt, itemsep=1pt, parsep=0pt}
+
+\begin{document}
+
+% Header
+\noindent{\huge\bfseries Mourad Heddaya}\hfill{\normalsize \href{mailto:mourad@uchicago.edu}{mourad@uchicago.edu} $|$ \href{https://mheddaya.com}{mheddaya.com} $|$ 425-753-5800}
+\vspace{2pt}
+\hrule
+
+%% Research Summary
+\vspace{12pt}
+\noindent Experience post-training and building evaluation and alignment systems for LLMs.
+% Built and deployed AI systems with automated pipelines for detecting hallucination, bias, and unsafe model behavior.
+Background in reasoning, long-context and multi-turn evaluation, and large-scale data processing.
+
+%% Education
+\section*{Education}
+
+\noindent\textbf{Ph.D. in Computer Science}, University of Chicago, 2021--2026 (expected May). \textit{Advisor: Chenhao Tan}
+
+\vspace{4pt}
+
+\noindent\textbf{B.S. in Informatics}, University of Washington, 2015--2019. \textit{Advisors: Noah Smith \& Mari Ostendorf}
+
+%% Publications
+\section*{Selected Publications}
+\vspace{4pt}
+\begin{enumerate}[label={[\arabic*]}, leftmargin=2em, topsep=2pt, itemsep=1pt, parsep=0pt]
+    \item \textbf{M.\ Heddaya}, R.\ Wadhawan, M.\ Roberts, C.\ Tan. \href{https://mheddaya.com/papers/acl2026_abridge.pdf}{When Internalization Fails: Finding Better Targets for Reasoning Compression.} Under review, \textit{ACL 2026}.
+    \item \textbf{M.\ Heddaya}, K.\ MacMillan, A.\ Malani, H.\ Mei, C.\ Tan. \href{https://arxiv.org/abs/2501.00097}{CaseSumm: A Large-Scale Dataset for Long-Context Summarization.} \textit{Findings of NAACL 2025}. \textit{Accepted with talk @ \href{https://www.amlecon.org}{ALEA 2024}}.
+    \item \textbf{M.\ Heddaya}, C.\ Tan, R.\ Voigt, Q.\ Zeng, A.\ Zentefis. \href{https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5259107}{A Century of Inflation Narratives.} \textit{SSRN 2025}.
+    \item \textbf{M.\ Heddaya}, Q.\ Zeng, C.\ Tan, R.\ Voigt, A.\ Zentefis. \href{https://aclanthology.org/2024.wnu-1.12/}{Causal Micro-Narratives.} \textit{WNU @ EMNLP 2024}.
+    \item \textbf{M.\ Heddaya}, S.\ Dworkin, C.\ Tan, R.\ Voigt, A.\ Zentefis. \href{https://aclanthology.org/2023.acl-long.735/}{Language of Bargaining.} \textit{ACL 2023}.
+\end{enumerate}
+
+%% Research
+\section*{Experience}
+\vspace{4pt}
+\noindent{\large\textbf{Doctoral Researcher, University of Chicago CS}} \hfill 2021--2026
+% \begin{cvitems}
+%     \item Showed that ICoT-style curricula for \textbf{reasoning compression} [1], effective on short traces, fail to internalize long reasoning in competition math; proposed post-think distillation, which preserves the teacher solution path and achieves the best accuracy--efficiency trade-off at matched token budgets.
+%     \item {[ongoing]} Built and deployed \href{https://civicchats.org}{CivicChats.org}, an AI platform for civic deliberation with a fully automated evaluation system (CivicEval); running a large-scale controlled experiment on voter understanding. \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{[blog]}
+%     \item Introduced \textbf{causal micro-narratives} [4] and classified 4.2M sentences from a century of U.S.\ inflation coverage [2]; found narratives predict consumer expectations and spread via contagion and differentiation.
+%     \item Built \textbf{CaseSumm} [3], a long-context benchmark of 25.6K Supreme Court opinion–summary pairs; showed automatic metrics diverge from expert judgment and fine-tuned models hallucinate in 20\% of summaries vs.\ near-zero for GPT-4.
+%     \item Collected $\sim$400 human \textbf{bargaining} interactions with real incentives [5]; language reduces price variance 3× and simple linguistic features outperform transformers at predicting outcomes.
+% \end{cvitems}
+\begin{cvitems}
+    \item {[ongoing]} Developing \textbf{AI to support critical thinking and civic deliberation} through \href{https://civicchats.org}{CivicChats.org}. Built an automated evaluation pipeline to detect hallucinations, bias, and stereotyping through \textbf{iterative prompt optimization over collected multi-turn user data}. Follow-up work on \textbf{large-scale data curation and synthetic data generation for post-training} to elicit coherent perspectives in models to support more productive user interactions. Wrote about this effort \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{here}.
+    % \item {[ongoing]} Built and deployed \href{https://civicchats.org}{CivicChats.org}, an end-to-end AI platform for civic deliberation. Built CivicEval, an automated evaluation system whose outputs inform iterative prompt optimization over collected user data. Running a controlled experiment on voter understanding. Follow-up work on large-scale data curation, synthetic data generation, and training to elicit coherent attitudes in models beyond surface style to support safer and more productive user interactions. \href{https://open.substack.com/pub/cichicago/p/civicchats-building-ai-to-support}{[blog]}
+    \item Built a 25.6K \textbf{long-context understanding benchmark} from Supreme Court opinions [2]. Showed fine-tuning improves automatic metrics while increasing hallucination rate. Found that a) \textbf{frontier models hallucinate less but more subtly, creating critical safety challenges in mitigating their risk,} and b) neither standard metrics nor LLM-as-judge reliably correlate with human judgement.
+    \item Developed a method for \textbf{at-scale automatic extraction of causal narratives and applied it to 4.2M sentences} from a century of U.S.\ inflation coverage [4]. Found that causal narratives predict consumer expectations and spread via contagion and differentiation [3].
+    \item Showed that language reduces price variance by 3x, through experimental design and controlled experiment ($\sim$400 participants). Found that successful buyers use empathetic framing while pushing prices down whereas sellers succeed by asking user needs early in the conversation [5].
+    
+    % Designed and ran a controlled experiment with $\sim$400 participants and real monetary incentives [5]. Showed language reduces price variance 3$\times$ and found that successful buyers use empathetic framing while pushing prices down, whereas successful sellers win by asking questions early to set the agenda.
+\end{cvitems}
+
+\vspace{4pt}
+\noindent{\large\textbf{ML Research Scientist Intern, \href{https://www.abridge.com}{Abridge AI}}} \hfill Summer 2025
+\begin{cvitems}
+    \item Demonstrated that chain-of-thought internalization fails on complex reasoning [1]. Proposed \textbf{post-think reasoning distillation}, a simple yet effective compression target that preserves the teacher's solution path and achieves the \textbf{best accuracy--efficiency trade-off}. Motived by the need for faster inference that tightens the human oversight loop in \textbf{safety critical healthcare settings}.
+\end{cvitems}
+
+\vspace{4pt}
+\noindent{\large\textbf{Applied Scientist Intern, \href{https://aws.amazon.com/bedrock/}{Amazon AWS AI Labs (Bedrock)}}} \hfill Summer 2023
+\begin{cvitems}
+    \item Developed a method for \textbf{efficient LLM safety alignment at scale without human annotation}, where the LLM scores its own diverse outputs and uses self-feedback as a regularizer, drastically reducing training speed and complexity by eliminating need to serve reference and reward models.
+\end{cvitems}
+
+
+% \vspace{4pt}
+\break
+\noindent{\large\textbf{Research Engineer, University of Washington}} \hfill 2020--2021
+\begin{cvitems}
+    \item Industry collaboration (T-Mobile) building an unsupervised information extraction system for 
+    \textbf{massive real-world conversational speech data}. Identified distinct conversation paths corresponding to \textbf{successful vs.\ unsuccessful customer interactions} using learned HMM topology, delivering methods and analyses to industry partner. (Advisors: Noah Smith \& Mari Ostendorf). \href{https://aclanthology.org/2022.findings-emnlp.415/}{[paper]}
+\end{cvitems}
+
+%% Other Papers
+\section*{Other Papers \& Research Mentorship}
+
+\begin{cvitems}
+    \item J.\ Fu, \textbf{M.\ Heddaya}, C.\ Tan. \href{https://openreview.net/forum?id=d1PcXKaAON}{Automatically Generating Hard Math Problems from Hypothesis-Driven Error Analysis.} \textit{LLM Reasoning @ ICLR 2026}.
+    \item C.\ Shah, A.\ Agarwal, K.\ Garg, \textbf{M.\ Heddaya}. \href{https://neurips.cc/virtual/2025/loc/san-diego/128019}{LLM Rationalis? Measuring Bargaining Capabilities of AI Negotiators.} \textit{MTI @ NeurIPS 2025}.
+\end{cvitems}
+
+%% Invited Talks
+\section*{Invited Talks}
+\begin{cvitems}
+
+\item \href{https://fgrovep.com}{\textbf{Freestone Grove Partners Investment Firm}}, April 2025 --- \textit{Causal Micro-Narratives}.
+
+% \vspace{4pt}
+
+\item \href{https://www.coll.mpg.de}{\textbf{Max Planck Institute for Research on Collective Goods}}, February 2025 --- \textit{NLP in Law \& Economics}.
+
+% \vspace{4pt}
+
+\item \textbf{University of Chicago LEAP Workshop}, January 2023 --- \textit{Language of Bargaining}.
+    
+\end{cvitems}
+
+%% Service
+\section*{Service}
+
+\begin{cvitems}
+    \item \href{https://aclrollingreview.org}{ARR} Reviewer: June 2024, November 2024, October 2025, January 2026.
+    \item \href{https://ic2s2-2026.org}{IC2S2} Reviewer: 2022, 2023, 2024, 2025, 2026.
+    \item Program Committee, \href{https://datascience.uchicago.edu/events/human-ai-conference/}{Symposium on Human + AI}, Fall 2022.
+\end{cvitems}
+
+%% Teaching
+\section*{Teaching Assistantships}
+
+\textbf{University of Chicago}\\
+\hspace*{2em}\textit{CMSC 25400 -- Machine Learning, Winter 2023}\\
+\hspace*{2em}\textit{CMSC 25300 / 35300 -- Mathematical Foundation of Machine Learning, Fall 2022}\\
+\hspace*{2em}\textit{CMSC 35100 -- Natural Language Processing, Winter 2022}
+
+
+% %% Skills & Methods
+% \section*{Skills \& Methods}
+% \begin{cvitems}
+%     \item \textbf{Technical:} Python, PyTorch, HuggingFace transformers/trl, LoRA/PEFT, vLLM, Node.js, PostgreSQL, full-stack development.
+%     \item \textbf{Research:} LLM fine-tuning \& prompting, RLHF/alignment, experimental design, survey design, evaluation frameworks, large-scale text analysis.
+% \end{cvitems}
+
+
+% long context, multi-turn evaluation, pipeline, ai evaluation, reasoning alignment, 
+% adjust a bit for cv feasible me 
+
+\end{document}
