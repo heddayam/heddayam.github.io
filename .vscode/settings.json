@@ -11,7 +11,10 @@
     {
       "name": "latexmk",
       "command": "latexmk",
-      "args": ["-pdf", "-g", "%DOC%"]
+      "args": ["-pdf", "-g", "%DOC%"],
+      "env": {
+        "PATH": "/Library/TeX/texbin:/usr/bin:/bin:/usr/sbin:/sbin"
+      }
     }
   ]
 }
