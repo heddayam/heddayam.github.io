@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Tracker — Bracket</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .modebar { display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    background:var(--bg); border:1px solid var(--line); border-radius:var(--radius); padding:14px 18px; margin:6px 0 14px; }
+  .sliderwrap { display:flex; align-items:center; gap:12px; flex:1; min-width:280px; }
+  .sliderwrap input[type=range] { flex:1; accent-color:var(--green); }
+  .sliderwrap .thr { font-weight:800; font-variant-numeric:tabular-nums; min-width:120px; text-align:right; }
+  .legend-row { font-size:12.5px; color:var(--gray); margin:0 0 8px; }
+
+  .bk-scroll { width:100vw; margin-left:calc(50% - 50vw); overflow-x:auto; padding:6px 24px 26px; }
+  .bk { display:flex; gap:26px; align-items:stretch; min-height:880px; width:1720px; max-width:1720px; margin:0 auto; }
+  .col { display:flex; flex-direction:column; min-width:170px; flex:1; }
+  .col.col-final { min-width:200px; }
+  .col h4 { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--gray);
+    margin:0 0 8px; font-weight:800; text-align:center; height:16px; }
+  .colbody { flex:1; display:flex; flex-direction:column; }
+  .cell { flex:1; display:flex; align-items:center; justify-content:center; position:relative; }
+
+  .ko { background:var(--bg); border:1px solid var(--line); border-radius:9px; padding:7px 9px;
+    width:100%; font-size:12.5px; position:relative; z-index:1; }
+  .ko .ko-meta { font-size:9.5px; color:var(--gray2); display:flex; justify-content:space-between; margin-bottom:4px; gap:6px; }
+  .ko .slot { display:flex; align-items:center; gap:6px; padding:2px 0; color:var(--ink); min-height:20px; }
+  .ko .slot.placeholder { color:var(--gray2); font-style:italic; font-size:11px; }
+  .ko .slot .flag { font-size:15px; width:18px; }
+  .ko .slot .team-name { font-size:12.5px; }
+  .ko .slot.known .team-name { font-weight:700; }
+  .ko .slot .prob { margin-left:auto; font-size:9.5px; font-weight:800; color:var(--green);
+    background:var(--green-bg); border-radius:4px; padding:1px 5px; }
+
+  .col.cL .cell::after, .col.cR .cell::after {
+    content:""; position:absolute; top:50%; width:26px; height:2px; background:var(--line); }
+  .col.cL .cell::after { right:0; transform:translate(100%,-50%); }
+  .col.cR .cell::after { left:0;  transform:translate(-100%,-50%); }
+  .col.recv.cL .cell::before {
+    content:""; position:absolute; left:0; top:25%; height:50%; width:2px; background:var(--line); transform:translateX(-2px); }
+  .col.recv.cR .cell::before {
+    content:""; position:absolute; right:0; top:25%; height:50%; width:2px; background:var(--line); transform:translateX(2px); }
+
+  .final-wrap { position:relative; width:100%; }
+  .final-card { background:var(--green-d); color:#fff; border:none; }
+  .final-card .ko-meta { color:#9fc4b6; }
+  .final-card .slot, .final-card .slot .team-name { color:#fff; }
+  .trophy { position:absolute; left:0; right:0; bottom:100%; margin-bottom:12px; text-align:center; line-height:0; }
+  .trophy img { display:inline-block; height:78px; width:auto; filter:drop-shadow(0 3px 5px rgba(0,0,0,.2)); }
+  .thirdplace { max-width:260px; margin:10px auto 0; }
+  @media (max-width:700px){ .bk{ min-width:1080px; } }
+
+  /* click-to-trace a team's path */
+  .ko .slot .team-name { cursor:pointer; }
+  .ko .slot .team-name:hover { text-decoration:underline; }
+  .trace-banner { display:flex; align-items:center; gap:12px; background:var(--green-bg);
+    border:1px solid var(--green); color:var(--green-d); border-radius:9px; padding:9px 14px; margin:0 0 12px; font-size:13.5px; }
+  .trace-banner b { font-weight:800; }
+  .trace-banner .tb-flag { font-size:17px; }
+  .trace-banner button { margin-left:auto; border:1px solid var(--green); background:#fff; color:var(--green-d);
+    border-radius:7px; padding:5px 12px; font-weight:700; cursor:pointer; font-size:12.5px; }
+  .bk.tracing .ko { opacity:.32; transition:opacity .12s; }
+  .bk.tracing .ko.on-path { opacity:1; border-color:var(--green); box-shadow:0 0 0 2px var(--green-bg); }
+  .ko .slot.traced .team-name { color:var(--green); font-weight:800; }
+  .final-card .slot.traced .team-name { color:#fff; text-decoration:underline; }
+
+  /* hover tooltip: other possible teams for a slot */
+  .ko .slot { position:relative; }
+  .slot-tip { position:absolute; left:0; bottom:calc(100% + 6px); z-index:40; display:none;
+    min-width:150px; background:#fff; border:1px solid var(--line); border-radius:8px; padding:7px 9px;
+    box-shadow:0 6px 20px rgba(0,0,0,.16); cursor:default; }
+  .ko .slot:hover .slot-tip { display:block; }
+  .slot-tip .tip-h { display:block; font-size:9px; text-transform:uppercase; letter-spacing:.6px; color:var(--gray2); font-weight:800; margin-bottom:4px; }
+  .tip-row { display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; padding:2px 0; font-style:normal; }
+  .tip-row .tip-fl { font-size:13px; }
+  .tip-row .tip-nm { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tip-row .tip-p { font-variant-numeric:tabular-nums; color:var(--gray); font-weight:800; }
+  .final-card .slot-tip { color:var(--ink); }
+</style>
+</head>
+<body>
+<div id="nav"></div>
+<main class="wrap">
+  <div class="page-head">
+    <p class="kicker">★ Knockout bracket</p>
+    <h1>The road to the Final</h1>
+    <p class="lede">The full knockout tree, Final in the middle. By default only positions that are
+      <b>mathematically locked</b> are filled. Drag the slider down to project the rest — each open slot
+      shows the most likely team and how often it lands there.</p>
+  </div>
+
+  <div class="modebar">
+    <div class="sliderwrap">
+      <span class="small muted" style="white-space:nowrap">Show teams at least</span>
+      <input type="range" id="thr" min="0" max="100" step="5" value="100">
+      <span class="thr" id="thrval">100% — locked only</span>
+    </div>
+  </div>
+  <p class="legend-row" id="legend"></p>
+  <div class="trace-banner" id="tracebar" style="display:none"></div>
+
+  <div class="bk-scroll"><div class="bk" id="bk"></div></div>
+  <div class="thirdplace" id="third"></div>
+</main>
+<div id="footer"></div>
+
+<script src="data.js"></script>
+<script src="feed.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script>
+renderNav("bracket.html");
+renderFooter();
+
+let threshold = 1.0;
+let trace = null;                 // short code of team whose path is highlighted
+const KO = {}; WC.KNOCKOUTS.forEach(k => KO[k[0]] = { num:k[0], round:k[1], loc:k[2], t1:k[3], t2:k[4], date:k[5] });
+const BR = (window.FEED && FEED.bracket) || {};   // R32 participants
+const WIN = (window.FEED && FEED.win) || {};      // per-match winner distribution
+
+// bracket tree
+const parentOf = {}, childrenOf = {};
+WC.KNOCKOUTS.forEach(k => {
+  childrenOf[k[0]] = [];
+  [k[3], k[4]].forEach(d => { const mm = d.match(/^Match (\d+) winner$/); if (mm){ parentOf[+mm[1]] = k[0]; childrenOf[k[0]].push(+mm[1]); } });
+});
+
+// Who occupies a given slot? R32 slots come from participant data; deeper slots
+// are the winner of the feeding match.
+function slotDist(num, sideKey){
+  if (BR[num]) return BR[num][sideKey] || null;
+  const desc = sideKey === "top" ? KO[num].t1 : KO[num].t2;
+  const mm = desc.match(/^Match (\d+) winner$/);
+  return mm ? (WIN[+mm[1]] || null) : null;
+}
+
+// the trace team's path: set of match numbers + which side it sits on at each
+function pathFor(short){
+  let start = null, best = -1;
+  Object.keys(BR).forEach(n => ["top","bottom"].forEach(side => {
+    const e = (BR[n][side] || []).find(x => x[0] === short); if (e && e[1] > best){ best = e[1]; start = +n; }
+  }));
+  const set = new Set(), sideAt = {};
+  if (start == null) return { set, sideAt };
+  set.add(start);
+  sideAt[start] = (BR[start].top || []).some(x => x[0] === short) ? "top" : "bottom";
+  let cur = start;
+  while (parentOf[cur] != null){ const par = parentOf[cur]; sideAt[par] = childrenOf[par][0] === cur ? "top" : "bottom"; set.add(par); cur = par; }
+  return { set, sideAt };
+}
+let PATH = null;
+
+// hover tooltip: the other teams that could fill this slot, with likelihood
+function tipHTML(dist){
+  if (!dist || dist.length < 2) return "";
+  const rows = dist.slice(0, 6).map(([s, p]) =>
+    `<span class="tip-row"><span class="tip-fl">${flag(team(s).code)}</span>
+      <span class="tip-nm">${dispName(s)}</span><span class="tip-p">${pct(p)}</span></span>`).join("");
+  return `<span class="slot-tip"><span class="tip-h">Possible teams</span>${rows}</span>`;
+}
+function teamSlot(s, prob, o, dist){
+  o = o || {};
+  const chip = o.locked ? `<span class="prob" style="background:#e7efe9;color:#0a6b4f">✓</span>`
+    : (prob != null ? `<span class="prob">${pct(prob)}</span>` : "");
+  return `<div class="slot known ${o.traced ? "traced" : ""}">${flagSpan(s)}
+    <a class="team-name" data-team="${s}" href="team.html?team=${team(s).slug}">${dispName(s)}</a>${chip}${tipHTML(dist)}</div>`;
+}
+const ph = (desc, dist) => `<div class="slot placeholder">${desc}${tipHTML(dist)}</div>`;
+
+function renderSlot(num, sideKey){
+  const desc = sideKey === "top" ? KO[num].t1 : KO[num].t2;
+  const d = slotDist(num, sideKey);
+  if (PATH && PATH.set.has(num)){
+    if (PATH.sideAt[num] === sideKey){
+      // exact: a team has one possible node per round, so its reach-odds = prob of being here
+      const key = { "Round of 32":"mk", "Round of 16":"r16", "Quarterfinal":"qf", "Semifinal":"sf", "Final":"fi" }[KO[num].round];
+      const rp = team(trace)[key];
+      return teamSlot(trace, rp != null ? rp : 1e-9, { traced:true }, d);
+    }
+    return d && d[0] ? teamSlot(d[0][0], d[0][1], {}, d) : ph(desc, d);
+  }
+  if (d && d[0]){ const [s, p] = d[0];
+    if (p >= 0.99995) return teamSlot(s, null, { locked:true }, d);
+    if (p >= threshold) return teamSlot(s, p, {}, d);
+  }
+  return ph(desc, d);
+}
+
+function koCard(num, opts={}){
+  const k = KO[num];
+  const onPath = PATH && PATH.set.has(num) ? " on-path" : "";
+  const cls = (opts.final ? "ko final-card" : "ko") + onPath;
+  const isThird = !BR[num] && !/^Match \d+ winner$/.test(k.t1); // 103 third-place playoff
+  const s1 = isThird ? ph(k.t1) : renderSlot(num,"top");
+  const s2 = isThird ? ph(k.t2) : renderSlot(num,"bottom");
+  return `<div class="${cls}">
+    <div class="ko-meta"><span>Match ${k.num}</span><span>${fmtDate(k.date)}</span></div>
+    ${s1}${s2}</div>`;
+}
+
+const COLS = [
+  { title:"Round of 32", side:"L", recv:false, m:[74,77,73,75,83,84,81,82] },
+  { title:"Round of 16", side:"L", recv:true,  m:[89,90,93,94] },
+  { title:"Quarterfinal", side:"L", recv:true, m:[97,98] },
+  { title:"Semifinal", side:"L", recv:true,    m:[101] },
+  { title:"Final", side:"F", recv:false,       m:[104] },
+  { title:"Semifinal", side:"R", recv:true,    m:[102] },
+  { title:"Quarterfinal", side:"R", recv:true, m:[99,100] },
+  { title:"Round of 16", side:"R", recv:true,  m:[91,92,95,96] },
+  { title:"Round of 32", side:"R", recv:false, m:[76,78,79,80,86,88,85,87] }
+];
+
+function render(){
+  PATH = trace ? pathFor(trace) : null;
+  const bk = document.getElementById("bk");
+  bk.className = "bk" + (trace ? " tracing" : "");
+  bk.innerHTML = COLS.map(c=>{
+    const sideCls = c.side==="L"?"cL":c.side==="R"?"cR":"cF";
+    const recvCls = c.recv?"recv":"";
+    const finalCls = c.side==="F"?"col-final":"";
+    const body = c.side==="F"
+      ? `<div class="cell"><div class="final-wrap"><div class="trophy"><img src="assets/wc2026-emblem.png" alt="FIFA World Cup 2026"></div>${koCard(104,{final:true})}</div></div>`
+      : c.m.map(n=>`<div class="cell">${koCard(n)}</div>`).join("");
+    return `<div class="col ${sideCls} ${recvCls} ${finalCls}"><h4>${c.title}</h4><div class="colbody">${body}</div></div>`;
+  }).join("");
+  document.getElementById("third").innerHTML =
+    `<h4 style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--gray);font-weight:800">Third-place playoff</h4>${koCard(103)}`;
+  attachClicks();
+  renderBanner();
+}
+function attachClicks(){
+  document.querySelectorAll('#bk .team-name[data-team]').forEach(a =>
+    a.addEventListener("click", e => { e.preventDefault(); const s = a.dataset.team; trace = (trace === s) ? null : s; render(); }));
+}
+function renderBanner(){
+  const el = document.getElementById("tracebar");
+  if (!trace){ el.style.display = "none"; el.innerHTML = ""; return; }
+  el.style.display = "flex";
+  el.innerHTML = `<span class="tb-flag">${flag(team(trace).code)}</span>
+    <span>Tracing <b>${team(trace).name}</b>'s projected path — click another team to switch, or open the
+    <a href="team.html?team=${team(trace).slug}">full team page →</a></span>
+    <button id="clrtrace">Clear</button>`;
+  document.getElementById("clrtrace").onclick = () => { trace = null; render(); };
+}
+
+function setThreshold(v){
+  threshold = v/100;
+  const tv = document.getElementById("thrval");
+  const lg = document.getElementById("legend");
+  const hint = ` <b>Click any team to trace its path</b>; hover a slot to see other possible teams.`;
+  if (v >= 100){
+    tv.textContent = "100% — locked only";
+    lg.innerHTML = "Only mathematically decided positions are shown (✓). Lower the slider to project the most likely teams, every round to the Final." + hint;
+  } else if (v <= 0){
+    tv.textContent = "show most likely";
+    lg.innerHTML = "Every slot shows its single most likely team, all the way to the Final — even toss‑ups. ✓ marks locked spots." + hint;
+  } else {
+    tv.textContent = "≥ " + v + "% confidence";
+    lg.innerHTML = `Each slot shows the most likely team when it lands there in at least <b>${v}%</b> of simulations — through every round to the Final. ✓ marks locked spots.` + hint;
+  }
+  render();
+}
+document.getElementById("thr").oninput = e => setThreshold(+e.target.value);
+
+const qTrace = getParam("trace");
+if (qTrace && TEAM_BY_SHORT[qTrace]) trace = qTrace;
+
+const qThr = getParam("thr");
+if (qThr !== null && !isNaN(+qThr)) {
+  const v = Math.max(0, Math.min(100, Math.round(+qThr/5)*5));
+  document.getElementById("thr").value = v;
+  setThreshold(v);
+} else {
+  setThreshold(100);
+}
+</script>
+</body>
+</html>

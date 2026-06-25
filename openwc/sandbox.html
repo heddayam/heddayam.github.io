@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Tracker — Scenario Sandbox</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .sb-controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    background:var(--bg); border:1px solid var(--line); border-radius:var(--radius); padding:12px 16px; margin:6px 0 8px; position:sticky; top:56px; z-index:20; }
+  .sb-btn { border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 13px; font-weight:700; font-size:13px; cursor:pointer; color:var(--ink); }
+  .sb-btn:hover { background:var(--bg2); }
+  .sb-btn.primary { background:var(--green); color:#fff; border-color:var(--green); }
+  .sb-count { margin-left:auto; font-size:12.5px; color:var(--gray); font-weight:600; }
+  .tabs { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .tabs button { border:none; background:#fff; padding:7px 14px; font-weight:700; font-size:13px; cursor:pointer; color:var(--gray); }
+  .tabs button.on { background:var(--green-d); color:#fff; }
+
+  .sb-layout { display:grid; grid-template-columns: 340px 1fr; gap:20px; align-items:start; }
+  @media (max-width: 880px){ .sb-layout { grid-template-columns:1fr; } }
+  .sb-matches { background:var(--bg); border:1px solid var(--line); border-radius:var(--radius); padding:6px 12px 12px; }
+  .sb-matches h3 { font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--gray); margin:14px 0 6px; }
+  .sb-m { padding:7px 0; border-bottom:1px solid var(--line2); }
+  .sb-m:last-child { border-bottom:none; }
+  /* minmax(0,1fr) lets the side buttons shrink instead of overflowing the panel */
+  .sb-seg { display:grid; grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr); gap:5px; align-items:stretch; }
+  .sb-seg button { border:1px solid var(--line); background:#fff; border-radius:7px; padding:6px 9px; cursor:pointer;
+    font-size:11.5px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:7px;
+    justify-content:flex-start; text-align:left; min-width:0; overflow:hidden; }
+  /* draw cell stacks label over % so nothing is ever clipped */
+  .sb-seg button.draw { flex-direction:column; justify-content:center; align-items:center; gap:1px; padding:4px; line-height:1.15; color:var(--gray); }
+  .sb-seg button .flag { font-size:14px; width:18px; text-align:left; flex:none; }
+  .sb-seg button .nm { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1 1 auto; min-width:0; }
+  .sb-seg button.on { background:var(--green); border-color:var(--green); color:#fff; }
+  .sb-seg button.on.draw { background:#9a9a95; border-color:#9a9a95; color:#fff; }
+  .sb-prob { font-size:9px; font-weight:700; opacity:.6; flex:none; }
+  .sb-seg button.draw .sb-prob { opacity:.75; }
+
+  .sb-groups { display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); }
+  .adv { background:var(--green-bg); } .adv .pos { color:var(--green); font-weight:800; }
+  .third { background:#fff7df; } .four td { color:var(--gray2); }
+  .pill-st { font-size:9.5px; font-weight:800; padding:1px 6px; border-radius:4px; }
+  .pill-st.a { background:var(--green); color:#fff; } .pill-st.t { background:#caa53a; color:#fff; } .pill-st.o { background:#cbb3bf; color:#fff; }
+</style>
+</head>
+<body>
+<div id="nav"></div>
+<main class="wrap">
+  <div class="page-head">
+    <p class="kicker">★ What‑if</p>
+    <h1>Scenario sandbox</h1>
+    <p class="lede">Call the remaining group games yourself and watch the tables — and the eight third‑place
+      berths — rearrange in real time. Wins are scored as a one‑goal margin for goal‑difference purposes.</p>
+  </div>
+
+  <div class="sb-controls">
+    <button class="sb-btn primary" id="b-likely">Most likely</button>
+    <button class="sb-btn" id="b-reset">Clear picks</button>
+    <div class="tabs">
+      <button id="t-groups" class="on">Group tables</button>
+      <button id="t-third">Third‑place cut</button>
+    </div>
+    <span class="sb-count" id="count"></span>
+  </div>
+
+  <div class="sb-layout">
+    <div class="sb-matches" id="matches"></div>
+    <div id="output"></div>
+  </div>
+</main>
+<div id="footer"></div>
+
+<script src="data.js"></script>
+<script src="feed.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script>
+renderNav("sandbox.html");
+renderFooter();
+
+const REMAIN = ALL_MATCHES.filter(m => !m.final).sort((a,b)=> a.group<b.group?-1:a.group>b.group?1:new Date(a.date)-new Date(b.date));
+const choices = {};            // matchNum -> 'home'|'draw'|'away'
+let tab = "groups";
+const MP = (window.FEED && FEED.match) || {};
+
+/* ---- scenario standings ---- */
+function scenarioStandings(g){
+  const rows = {};
+  WC.TEAMS.filter(t=>t.group===g).forEach(t=> rows[t.s]={s:t.s,pts:0,gf:0,ga:0,w:0,d:0,l:0,played:0});
+  const apply = (a,b,ga,gb)=>{ a.played++; b.played++; a.gf+=ga; a.ga+=gb; b.gf+=gb; b.ga+=ga;
+    if(ga>gb){a.w++;b.l++;a.pts+=3;} else if(ga<gb){b.w++;a.l++;b.pts+=3;} else {a.d++;b.d++;a.pts++;b.pts++;} };
+  matchesForGroup(g).forEach(m=>{
+    if(m.final){ apply(rows[m.t1],rows[m.t2],m.g1,m.g2); }
+    else if(choices[m.num]){ const c=choices[m.num];
+      if(c==="home") apply(rows[m.t1],rows[m.t2],1,0);
+      else if(c==="away") apply(rows[m.t1],rows[m.t2],0,1);
+      else apply(rows[m.t1],rows[m.t2],0,0); }
+  });
+  const arr=Object.values(rows); arr.forEach(r=>r.gd=r.gf-r.ga);
+  arr.sort((a,b)=> b.pts-a.pts || b.gd-a.gd || b.gf-a.gf || team(a.s).name.localeCompare(team(b.s).name));
+  arr.forEach((r,i)=>r.pos=i+1);
+  return arr;
+}
+function scenarioThird(){
+  const thirds = WC.GROUPS.map(g=>{ const r=scenarioStandings(g)[2]; return {...r, group:g}; });
+  thirds.sort((a,b)=> b.pts-a.pts || b.gd-a.gd || b.gf-a.gf || team(a.s).name.localeCompare(team(b.s).name));
+  thirds.forEach((r,i)=>r.rank=i+1);
+  return thirds;
+}
+
+/* ---- match picker ---- */
+function segBtn(m, side){
+  const isHome = side==="home", s = isHome?m.t1:m.t2;
+  const on = choices[m.num]===side ? "on" : "";
+  const p = MP[m.num] ? (isHome?MP[m.num].t1:MP[m.num].t2) : null;
+  return `<button class="${on}" data-m="${m.num}" data-s="${side}">
+    ${flagSpan(s)}<span class="nm">${dispName(s)}</span>${p!=null?`<span class="sb-prob">${Math.round(p*100)}%</span>`:''}</button>`;
+}
+function renderMatches(){
+  const byG = {}; REMAIN.forEach(m=>(byG[m.group]=byG[m.group]||[]).push(m));
+  document.getElementById("matches").innerHTML = Object.keys(byG).sort().map(g=>`
+    <h3>Group ${g}</h3>` + byG[g].map(m=>{
+      const dp = MP[m.num]?Math.round(MP[m.num].x*100)+"%":"";
+      return `<div class="sb-m"><div class="sb-seg">
+        ${segBtn(m,"home")}
+        <button class="draw ${choices[m.num]==="draw"?"on draw":""}" data-m="${m.num}" data-s="draw">Draw${dp?`<span class="sb-prob">${dp}</span>`:''}</button>
+        ${segBtn(m,"away")}
+      </div></div>`;
+    }).join("")).join("");
+  document.querySelectorAll(".sb-seg button").forEach(b=> b.onclick = ()=>{
+    const n=+b.dataset.m, s=b.dataset.s;
+    choices[n] = (choices[n]===s) ? undefined : s;
+    if(!choices[n]) delete choices[n];
+    renderAll();
+  });
+}
+
+/* ---- output ---- */
+function renderGroups(){
+  document.getElementById("output").innerHTML = `<div class="sb-groups">` + WC.GROUPS.map(g=>{
+    const st=scenarioStandings(g);
+    const rows=st.map(r=>`<tr class="${r.pos<=2?'adv':r.pos===3?'third':'four'}">
+      <td class="pos col-pos">${r.pos}</td>
+      <td class="t-team"><span class="team-cell">${flagSpan(r.s)}<a class="team-name" href="team.html?team=${team(r.s).slug}">${dispName(r.s)}</a></span></td>
+      <td class="col-num t-num">${r.gd>0?"+":""}${r.gd}</td>
+      <td class="col-pts pts">${r.pts}</td></tr>`).join("");
+    return `<div class="card"><h3>Group ${g}</h3><table class="gtable">
+      <thead><tr><th class="col-pos"></th><th class="t-team">Team</th><th class="col-num">GD</th><th class="col-pts">Pts</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>`;
+  }).join("") + `</div>`;
+}
+function renderThird(){
+  const tp=scenarioThird();
+  let rows="";
+  tp.forEach((r,i)=>{
+    if(i===8) rows+=`<tr class="cutline"><td colspan="5"></td></tr><tr class="cutlabel elim"><td colspan="5">▲ These eight third‑place teams advance</td></tr>`;
+    rows+=`<tr class="${i<8?'adv':'four'}">
+      <td class="pos col-pos">${i+1}</td>
+      <td class="col-grp"><span class="badge-grp">${r.group}</span></td>
+      <td class="t-team"><span class="team-cell">${flagSpan(r.s)}<a class="team-name" href="team.html?team=${team(r.s).slug}">${dispName(r.s)}</a></span></td>
+      <td class="col-num t-num">${r.gd>0?"+":""}${r.gd}</td>
+      <td class="col-pts pts">${r.pts}</td></tr>`;
+  });
+  document.getElementById("output").innerHTML = `
+    <div class="card"><h3>Third‑place race — your scenario</h3>
+    <table class="gtable"><thead><tr><th class="col-pos"></th><th class="col-grp">Grp</th><th class="t-team">Team</th><th class="col-num">GD</th><th class="col-pts">Pts</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>
+    <p class="note">Drag results on the left and watch the cut line move. With the final group games staggered
+    across four days, a single result can flip the eighth and final berth.</p>`;
+}
+function renderOutput(){ tab==="groups"?renderGroups():renderThird(); }
+function renderAll(){
+  renderMatches(); renderOutput();
+  const n=Object.keys(choices).length;
+  document.getElementById("count").textContent = `${n} of ${REMAIN.length} games called`;
+}
+
+/* ---- controls ---- */
+document.getElementById("b-reset").onclick = ()=>{ for(const k in choices) delete choices[k]; renderAll(); };
+document.getElementById("b-likely").onclick = ()=>{
+  REMAIN.forEach(m=>{ const p=MP[m.num]; if(!p) return;
+    choices[m.num] = (p.t1>=p.x && p.t1>=p.t2)?"home":(p.t2>=p.x && p.t2>=p.t1)?"away":"draw"; });
+  renderAll();
+};
+function setTab(t){ tab=t; document.getElementById("t-groups").classList.toggle("on",t==="groups");
+  document.getElementById("t-third").classList.toggle("on",t==="third"); renderOutput(); }
+document.getElementById("t-groups").onclick=()=>setTab("groups");
+document.getElementById("t-third").onclick=()=>setTab("third");
+
+if (getParam("fill") === "likely") document.getElementById("b-likely").onclick();
+if (getParam("tab") === "third") setTab("third");
+renderAll();
+</script>
+</body>
+</html>

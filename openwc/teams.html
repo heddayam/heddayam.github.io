@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Tracker — Teams</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="nav"></div>
+<main class="wrap">
+  <div class="page-head">
+    <p class="kicker">★ All 48 teams</p>
+    <h1>Explore every team</h1>
+    <p class="lede">Pick a nation for its results, finishing-position odds, scenarios, and a
+      day-by-day rooting guide to the Round of 32.</p>
+  </div>
+  <div class="teams-index-grid" id="grid"></div>
+</main>
+<div id="footer"></div>
+
+<script src="data.js"></script>
+<script src="feed.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script>
+renderNav("teams.html");
+renderFooter();
+
+const grid = document.getElementById("grid");
+WC.GROUPS.forEach(g => {
+  const st = groupStandings(g);
+  const rows = st.map(r => {
+    const t = team(r.s);
+    const cls = t.mk >= 0.9999 && r.pos <= 2 ? "clinched" : (t.mk <= 0.0001 ? "out" : "");
+    return `<a class="trow ${cls}" href="team.html?team=${t.slug}">
+      ${flagSpan(r.s)}<span class="team-name">${dispName(r.s)}</span>
+      <span class="odds">${pct(t.mk)}</span></a>`;
+  }).join("");
+  grid.insertAdjacentHTML("beforeend",
+    `<div class="tcard"><h4>Group ${g}</h4>${rows}</div>`);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Tracker — Schedule &amp; Results</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="nav"></div>
+<main class="wrap">
+  <div class="page-head">
+    <p class="kicker">★ Live results</p>
+    <h1>Schedule &amp; results</h1>
+    <p class="lede">Every group-stage match by day, with final scores and upcoming kickoffs.
+      Knockout fixtures appear on the <a href="bracket.html">bracket</a>.</p>
+  </div>
+
+  <div style="margin:8px 0 18px;display:flex;gap:8px;flex-wrap:wrap" id="filters"></div>
+  <div id="days"></div>
+</main>
+<div id="footer"></div>
+
+<script src="data.js"></script>
+<script src="feed.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script>
+renderNav("schedule.html");
+renderFooter();
+
+let filter = "all";
+
+function matchRow(m) {
+  const t1 = team(m.t1), t2 = team(m.t2);
+  let mid, c1 = "side", c2 = "side right";
+  if (m.final) {
+    if (m.g1 > m.g2) c2 += " lose"; else if (m.g2 > m.g1) c1 += " lose";
+    mid = `<div class="score">${m.g1}<span class="x">–</span>${m.g2}</div><div class="mtag">Full time</div>`;
+  } else if (m.live) {
+    mid = `<div class="score">${m.g1}<span class="x">–</span>${m.g2}</div>
+      <div class="mtag"><span class="live-min">● ${m.disp || (m.minute ? m.minute+"'" : "LIVE")}</span></div>`;
+  } else {
+    mid = `<div class="kick">${fmtTime(m.date)}</div><div class="mtag">${fmtDate(m.date)}</div>`;
+  }
+  const w1 = m.final && m.g1 > m.g2 ? "win" : "";
+  const w2 = m.final && m.g2 > m.g1 ? "win" : "";
+  return `<div class="match">
+    <div class="${c1}">${flagSpan(m.t1)}
+      <a class="team-name ${w1}" href="team.html?team=${t1.slug}">${t1.name}</a></div>
+    <div class="mid">${mid}<div><span class="badge-grp">Grp ${m.group}</span></div></div>
+    <div class="${c2}"><a class="team-name ${w2}" href="team.html?team=${t2.slug}">${t2.name}</a>
+      ${flagSpan(m.t2)}</div>
+  </div>`;
+}
+
+function render() {
+  const days = {};
+  ALL_MATCHES.forEach(m => {
+    if (filter !== "all" && m.group !== filter) return;
+    (days[dayKey(m.date)] = days[dayKey(m.date)] || []).push(m);
+  });
+  const el = document.getElementById("days");
+  el.innerHTML = Object.keys(days).sort().map(k => {
+    const list = days[k].sort((a,b) => new Date(a.date) - new Date(b.date));
+    return `<div class="day-head">${fmtDay(k + "T12:00:00Z")}</div>
+      ${list.map(matchRow).join("")}`;
+  }).join("");
+}
+
+const fEl = document.getElementById("filters");
+fEl.innerHTML = `<a class="nav-link ${filter==="all"?"active":""}" style="background:#eee;color:#333" data-g="all">All groups</a>` +
+  WC.GROUPS.map(g => `<a class="nav-link" style="background:#eee;color:#333" data-g="${g}">Group ${g}</a>`).join("");
+fEl.querySelectorAll("[data-g]").forEach(a => a.onclick = e => {
+  e.preventDefault(); filter = a.dataset.g;
+  fEl.querySelectorAll("a").forEach(x => { x.style.background="#eee"; x.style.color="#333"; });
+  a.style.background = "var(--green)"; a.style.color = "#fff";
+  render();
+});
+render();
+</script>
+</body>
+</html>
