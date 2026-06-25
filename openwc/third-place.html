@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Tracker — Third-place race</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="nav"></div>
+<main class="wrap">
+  <div class="page-head">
+    <p class="kicker">★ Third-place tracker</p>
+    <h1>Which third-place teams advance?</h1>
+    <p class="lede">Only the top eight of the twelve group third-place finishers reach the Round of 32 —
+      a new wrinkle for the 48-team field. Follow the live race for those eight berths.</p>
+  </div>
+
+  <h2 class="section-title">Third-place table — as it stands</h2>
+  <div class="card" id="tpcard"></div>
+  <div class="note">Tiebreakers among third-place teams: points, then goal difference, then goals for.
+    Because the final group games are staggered across four days, the "as it stands" order changes often —
+    the team that is third today may not be third later.</div>
+
+  <h2 class="section-title">Chance of advancing as a third-place team</h2>
+  <p class="lede" style="margin-bottom:14px">From the simulation: how likely a third-place finisher is to grab one of the
+    eight berths, by points and goal difference.</p>
+  <div class="card" style="padding:16px 18px" id="advcard"></div>
+
+  <h2 class="section-title">Which group sends a third-place team through?</h2>
+  <p class="lede" style="margin-bottom:14px">Each group's combined chance of producing a qualifying third-place team,
+    and the most likely team to claim it.</p>
+  <div class="card" style="padding:16px 18px" id="bestcard"></div>
+</main>
+<div id="footer"></div>
+
+<script src="data.js"></script>
+<script src="feed.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script>
+renderNav("third-place.html");
+renderFooter();
+
+/* table */
+const tp = thirdPlaceTable();
+let rows = "";
+tp.forEach((r,i) => {
+  const t = team(r.s);
+  if (i === 8) rows += `<tr class="cutline"><td colspan="8"></td></tr>
+    <tr class="cutlabel elim"><td colspan="8">▲ Make Round of 32 · below would be eliminated</td></tr>`;
+  const grpDone = matchesForGroup(r.group).every(m=>m.final);
+  rows += `<tr class="${i<8?"clinched":"out"}">
+    <td class="pos col-pos">${i+1}</td>
+    <td class="col-grp"><span class="badge-grp">${r.group}</span></td>
+    <td class="t-team"><span class="team-cell">${flagSpan(r.s)}
+      <a class="team-name" href="team.html?team=${t.slug}">${dispName(r.s)}</a></span></td>
+    <td class="col-pld">${r.played}</td><td class="col-num">${r.gf}</td><td class="col-num">${r.ga}</td>
+    <td class="t-num col-num">${r.gd>0?"+":""}${r.gd}</td>
+    <td class="pts col-pts">${r.pts}</td>
+  </tr>`;
+});
+document.getElementById("tpcard").innerHTML = `
+  <h3>3rd-place teams — as it stands</h3>
+  <table class="gtable"><thead><tr>
+    <th class="col-pos"></th><th class="col-grp">Grp</th><th class="t-team">Team</th>
+    <th class="col-pld">Pld</th><th class="col-num">GF</th><th class="col-num">GA</th>
+    <th class="col-num">GD</th><th class="col-pts">Pts</th>
+  </tr></thead><tbody>${rows}</tbody></table>`;
+
+/* advancement bars */
+const A = WC.THIRD_ADV;
+function bar(label, p) {
+  return `<div class="oddsbar" style="margin:7px 0">
+    <div style="width:54px;font-weight:700;text-align:right">${label}</div>
+    <div class="bar-track"><div class="bar-fill" style="width:${Math.max(2,p*100)}%;
+      background:${p>=.5?'var(--green)':'var(--maroon)'}"></div></div>
+    <div class="bar-val">${pct(p)}</div></div>`;
+}
+let adv = `<div style="font-weight:800;margin:2px 0 6px">4 or more points</div>${bar("—", A.fourPlus)}
+  <div style="font-weight:800;margin:14px 0 6px">3 points, by goal difference</div>`;
+[["+2","2"],["+1","1"],["0","0"],["-1","-1"],["-2","-2"],["-3","-3"],["-4","-4"],["-5","-5"],["-6","-6"]]
+  .forEach(([lab,k]) => adv += bar(lab, A.threePts[k]));
+adv += `<div style="font-weight:800;margin:14px 0 6px">2 or fewer points</div>${bar("—", A.twoOrFewer)}`;
+document.getElementById("advcard").innerHTML = adv;
+
+/* best-third by group (segmented) */
+const segColors = ["#00533F","#2f8a6c","#7cb39c","#b48aa6"];
+let best = "";
+WC.BEST_THIRD.forEach(row => {
+  let cum = 0;
+  const segs = row.teams.map((tm,i) => {
+    const [s,rate] = tm;
+    const w = row.total > 0 ? (rate/row.total*100) : 0;
+    const lab = w > 14 ? `<span class="sflag">${flag(team(s).code)}</span>${s} ${pct(rate)}` : "";
+    return `<div class="seg" style="width:${w}%;background:${segColors[i%4]}" title="${team(s).name} ${pct(rate)}">${lab}</div>`;
+  }).join("");
+  best += `<div class="seg-row">
+    <div class="seg-group">Group ${row.group}</div>
+    <div class="seg-track">${segs}</div>
+    <div class="seg-total">${pct(row.total)}</div>
+  </div>`;
+});
+document.getElementById("bestcard").innerHTML = best;
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Tracker — Forecast</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="nav"></div>
+<main class="wrap">
+  <div class="page-head">
+    <p class="kicker">★ Simulation</p>
+    <h1>Tournament forecast</h1>
+    <p class="lede">Each team's chance of reaching every stage, from thousands of Monte-Carlo
+      simulations of the remaining schedule. Sort by any round.</p>
+  </div>
+
+  <div class="card">
+    <table id="ftable" class="gtable">
+      <thead><tr>
+        <th class="t-team">Team</th>
+        <th class="col-odds" data-k="mk">R32</th>
+        <th class="col-odds" data-k="r16">R16</th>
+        <th class="col-odds" data-k="qf">QF</th>
+        <th class="col-odds" data-k="sf">SF</th>
+        <th class="col-odds" data-k="fi">Final</th>
+        <th class="col-odds" data-k="ch">Win</th>
+      </tr></thead>
+      <tbody id="fbody"></tbody>
+    </table>
+  </div>
+  <p class="small muted" style="margin-top:10px">Click a column header to sort. Click a team for the full breakdown.</p>
+</main>
+<div id="footer"></div>
+
+<script src="data.js"></script>
+<script src="feed.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script>
+renderNav("forecast.html");
+renderFooter();
+
+let sortKey = "ch", dir = -1;
+function heat(p) {
+  // green intensity by probability
+  const a = Math.min(1, p);
+  const bg = `rgba(0,83,63,${0.04 + a*0.5})`;
+  const col = a > 0.55 ? "#fff" : "var(--ink)";
+  return `background:${bg};color:${col};`;
+}
+function render() {
+  const teams = WC.TEAMS.slice().sort((a,b) =>
+    dir * (((a[sortKey]||0) - (b[sortKey]||0)) || (a.ch - b.ch)) );
+  const body = document.getElementById("fbody");
+  body.innerHTML = teams.map(t => `
+    <tr>
+      <td class="t-team"><span class="team-cell">${flagSpan(t.s)}
+        <a class="team-name" href="team.html?team=${t.slug}">${t.name}</a>
+        <span class="muted small grp-badge">${t.group}</span></span></td>
+      <td class="t-num col-odds" style="${heat(t.mk)}">${pct(t.mk)}</td>
+      <td class="t-num col-odds" style="${heat(t.r16)}">${pct(t.r16)}</td>
+      <td class="t-num col-odds" style="${heat(t.qf)}">${pct(t.qf)}</td>
+      <td class="t-num col-odds" style="${heat(t.sf)}">${pct(t.sf)}</td>
+      <td class="t-num col-odds" style="${heat(t.fi)}">${pct(t.fi)}</td>
+      <td class="t-num col-odds" style="${heat(t.ch)}">${pct(t.ch)}</td>
+    </tr>`).join("");
+}
+document.querySelectorAll("#ftable th[data-k]").forEach(th => {
+  th.style.cursor = "pointer";
+  th.onclick = () => {
+    const k = th.dataset.k;
+    if (sortKey === k) dir = -dir; else { sortKey = k; dir = -1; }
+    render();
+  };
+});
+render();
+</script>
+</body>
+</html>

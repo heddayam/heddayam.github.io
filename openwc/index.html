@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Tracker — Group Standings</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="nav"></div>
+<main class="wrap">
+  <div class="page-head">
+    <p class="kicker">★ 2026 FIFA World Cup</p>
+    <h1>Group standings &amp; qualification tracker</h1>
+    <p class="lede">Every group, every scenario. Live group-stage results, who has clinched
+      a Round of 32 berth, who is eliminated, and each team's simulated chance of advancing.</p>
+    <p class="updated" id="updated"></p>
+  </div>
+
+  <h2 class="section-title">Latest results &amp; up next</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+    <div class="card"><h3>Most recent</h3><div id="recent"></div></div>
+    <div class="card"><h3>Up next</h3><div id="upnext"></div></div>
+  </div>
+
+  <h2 class="section-title">Groups</h2>
+  <div class="grid" id="groups"></div>
+
+  <h2 class="section-title">Third-place race — top 8 of 12 advance</h2>
+  <p class="lede" style="margin-bottom:14px">For the first time, eight of the twelve third-place teams reach the
+    knockouts. Here is the live "as it stands" table.
+    <a href="third-place.html">Full third-place tracker →</a></p>
+  <div class="card" id="thirdcard"></div>
+
+  <div class="note" id="legend"></div>
+</main>
+<div id="footer"></div>
+
+<script src="data.js"></script>
+<script src="feed.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script>
+renderNav("index.html");
+renderFooter();
+const u = new Date(WC.LAST_UPDATED);
+document.getElementById("updated").innerHTML =
+  `<span class="dot">●</span> Updated ${u.toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"})}`;
+
+/* ----- latest / up next ----- */
+function miniMatch(m) {
+  const t1 = team(m.t1), t2 = team(m.t2);
+  let mid, l1 = "", l2 = "";
+  if (m.final) {
+    if (m.g1 > m.g2) l2 = "lose"; else if (m.g2 > m.g1) l1 = "lose";
+    mid = `<div class="score" style="font-size:16px">${m.g1}<span class="x">–</span>${m.g2}</div>`;
+  } else if (m.live) {
+    mid = `<div class="score" style="font-size:16px">${m.g1}<span class="x">–</span>${m.g2}</div>
+      <div class="live-min">● ${m.disp || (m.minute ? m.minute+"'" : "LIVE")}</div>`;
+  } else {
+    mid = `<div class="kick">${fmtDate(m.date)}<br>${fmtTime(m.date)}</div>`;
+  }
+  return `<div class="match" style="padding:9px 12px;margin:0;border:none;border-bottom:1px solid var(--line2);border-radius:0">
+    <div class="side"><span class="flag">${flag(t1.code)}</span>
+      <a class="team-name ${l1}" href="team.html?team=${t1.slug}">${t1.name}</a></div>
+    <div class="mid" style="min-width:60px">${mid}<div><span class="badge-grp">${m.group}</span></div></div>
+    <div class="side right"><a class="team-name ${l2}" href="team.html?team=${t2.slug}">${t2.name}</a>
+      <span class="flag">${flag(t2.code)}</span></div>
+  </div>`;
+}
+const finals = ALL_MATCHES.filter(m=>m.final).sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,4);
+const upcoming = ALL_MATCHES.filter(m=>!m.final).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,4);
+document.getElementById("recent").innerHTML = finals.map(miniMatch).join("") ||
+  '<p class="muted small" style="padding:12px">No matches played yet.</p>';
+document.getElementById("upnext").innerHTML = upcoming.map(miniMatch).join("") +
+  `<a class="trow" href="schedule.html" style="display:block;padding:10px 12px;font-weight:700">Full schedule →</a>`;
+
+/* ----- group cards ----- */
+function formPills(form) {
+  const cells = form.slice(-3).map(f => `<span class="pill ${f}">${f}</span>`);
+  while (cells.length < 3) cells.push(`<span class="pill E">&nbsp;</span>`);
+  return `<span class="form">${cells.join("")}</span>`;
+}
+
+function rowClass(t, pos) {
+  if (t.mk >= 0.9999 && pos <= 2) return "clinched";
+  if (t.mk <= 0.0001) return "out";
+  return "";
+}
+
+const groupsEl = document.getElementById("groups");
+WC.GROUPS.forEach(g => {
+  const st = groupStandings(g);
+  const done = matchesForGroup(g).every(m => m.final);
+  let rows = "";
+  st.forEach(r => {
+    const t = team(r.s);
+    rows += `<tr class="${rowClass(t, r.pos)}">
+      <td class="pos col-pos">${r.pos}</td>
+      <td class="t-team"><span class="team-cell">${flagSpan(r.s)}
+        <a class="team-name" href="team.html?team=${t.slug}">${dispName(r.s)}</a></span></td>
+      <td class="col-form">${formPills(r.form)}</td>
+      <td class="t-num col-num">${r.gd>0?"+":""}${r.gd}</td>
+      <td class="pts col-pts">${r.pts}</td>
+      <td class="t-num col-odds">${pct(t.mk)}</td>
+    </tr>`;
+  });
+  groupsEl.insertAdjacentHTML("beforeend", `
+    <div class="card">
+      <h3>Group ${g}${done ? "" : " · in progress"}</h3>
+      <table class="gtable">
+        <thead><tr>
+          <th class="col-pos"></th><th class="t-team">Team</th>
+          <th class="col-form">Last 3</th><th class="col-num">GD</th>
+          <th class="col-pts">Pts</th><th class="col-odds">R32</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`);
+});
+
+/* ----- third place table ----- */
+const tp = thirdPlaceTable();
+let tprows = "";
+tp.forEach((r, i) => {
+  const t = team(r.s);
+  if (i === 8) tprows += `<tr class="cutline"><td colspan="7"></td></tr>
+    <tr class="cutlabel elim"><td colspan="7">▲ Above the line advances · below faces elimination</td></tr>`;
+  tprows += `<tr class="${i < 8 ? "clinched" : "out"}">
+    <td class="pos col-pos">${i+1}</td>
+    <td class="col-grp"><span class="badge-grp">${r.group}</span></td>
+    <td class="t-team"><span class="team-cell">${flagSpan(r.s)}
+      <a class="team-name" href="team.html?team=${t.slug}">${dispName(r.s)}</a></span></td>
+    <td class="col-pld">${r.played}</td>
+    <td class="t-num col-num">${r.gd>0?"+":""}${r.gd}</td>
+    <td class="pts col-pts">${r.pts}</td>
+    <td class="t-num col-odds">${pct(t.mk)}</td>
+  </tr>`;
+});
+document.getElementById("thirdcard").innerHTML = `
+  <h3>Third-place teams — as it stands</h3>
+  <table class="gtable">
+    <thead><tr>
+      <th class="col-pos"></th><th class="col-grp">Grp</th><th class="t-team">Team</th>
+      <th class="col-pld">Pld</th><th class="col-num">GD</th><th class="col-pts">Pts</th>
+      <th class="col-odds">Adv</th>
+    </tr></thead>
+    <tbody>${tprows}</tbody>
+  </table>`;
+
+document.getElementById("legend").innerHTML =
+  `<b>Reading the table:</b> green rows have clinched a Round of 32 spot;
+   greyed rows are eliminated. <b>R32 / Advance</b> is the simulated probability of reaching the Round of 32.
+   Standings tiebreakers: points, then goal difference, then goals for.`;
+</script>
+</body>
+</html>

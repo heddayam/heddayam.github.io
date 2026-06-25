@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Tracker — Team</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="nav"></div>
+<main class="wrap" id="main"></main>
+<div id="footer"></div>
+
+<script src="data.js"></script>
+<script src="feed.js"></script>
+<script src="app.js"></script>
+<script src="live.js"></script>
+<script>
+renderNav("");
+renderFooter();
+
+const slug = getParam("team");
+const t = TEAM_BY_SLUG[slug];
+const main = document.getElementById("main");
+
+if (!t) {
+  main.innerHTML = `<div class="page-head"><h1>Team not found</h1>
+    <p class="lede">Pick a side from the <a href="teams.html">team index</a>.</p></div>`;
+  throw new Error("no team");
+}
+
+const g = t.group;
+const st = groupStandings(g);
+const me = st.find(r => r.s === t.s);
+const groupDone = matchesForGroup(g).every(m => m.final);
+const myMatches = matchesForTeam(t.s).sort((a,b)=> new Date(a.date)-new Date(b.date));
+const myRemaining = myMatches.filter(m => !m.final);
+const status = teamStatus(t.s);
+
+/* ---------- helpers ---------- */
+function ordinal(n){ return n+["th","st","nd","rd"][(n%100>>3^1&&n%10)<4?n%10:0]; }
+function placesPhrase(arr){
+  if (arr.length===1) return ordinal(arr[0]);
+  if (arr.length===2 && arr[1]-arr[0]===1) return ordinal(arr[0])+" or "+ordinal(arr[1]);
+  return ordinal(Math.min(...arr))+"–"+ordinal(Math.max(...arr));
+}
+function implication(arr){
+  const mn=Math.min(...arr), mx=Math.max(...arr);
+  if (mx<=2) return ["good","Guaranteed a top-two finish — into the Round of 32."];
+  if (mn>=3 && mx===3) return ["neutral","Locked into third place; advancement decided by the third-place race across the other groups."];
+  if (mn>=3 && mx>=4) return ["bad","Third or fourth — would need the third-place race to break right, or face elimination."];
+  if (mx<=3) return ["neutral","A top-three finish: through directly, or into the third-place race if third."];
+  return ["neutral","Could land anywhere from "+ordinal(mn)+" to "+ordinal(mx)+" — a win removes the risk."];
+}
+
+/* ---------- hero ---------- */
+const advTotal = (t.p1||0)+(t.p2||0)+(t.p3q||0);
+main.insertAdjacentHTML("beforeend", `
+  <p class="crumb"><a href="teams.html">Teams</a> · Group ${g}</p>
+  <div class="team-hero">
+    <span class="flag flag-lg">${flag(t.code)}</span>
+    <div>
+      <h1>${t.name}</h1>
+      <div class="meta">Group ${g} · ${me.played} played ·
+        <b>${me.pts}</b> pts · GD ${me.gd>0?"+":""}${me.gd}</div>
+    </div>
+    <div style="margin-left:auto"><span class="statuschip ${status.cls}">${status.label}</span></div>
+  </div>`);
+
+/* ---------- stat cards ---------- */
+function likelyFinish(){
+  const opts = [["1st",t.p1||0],["2nd",t.p2||0],["3rd",(t.p3q||0)+(t.p3e||0)],["4th",t.p4||0]];
+  opts.sort((a,b)=>b[1]-a[1]);
+  return opts[0][1] > 0 ? opts[0][0] : "—";
+}
+main.insertAdjacentHTML("beforeend", `
+  <div class="stat-grid">
+    <div class="stat"><div class="v ${t.mk>=.9999?'green':(t.mk<=.0001?'maroon':'')}">${pct(t.mk)}</div>
+      <div class="k">Reach Round of 32</div></div>
+    <div class="stat"><div class="v">${likelyFinish()}</div><div class="k">Most likely finish</div></div>
+    <div class="stat"><div class="v">${pct(t.r16)}</div><div class="k">Reach Round of 16</div></div>
+    <div class="stat"><div class="v">${pct(t.qf)}</div><div class="k">Reach Quarterfinal</div></div>
+    <div class="stat"><div class="v ${t.ch>=.05?'green':''}">${pct(t.ch)}</div><div class="k">Win it all</div></div>
+  </div>`);
+
+/* ---------- finishing-position distribution ---------- */
+function seg(cls,p,label){ if(!p) return ""; const w=p*100;
+  return `<div class="d ${cls}" style="width:${w}%" title="${label} ${pct(p)}">${w>9?Math.round(w)+"%":""}</div>`; }
+const distHtml = `
+  <div class="panel">
+    <h3>Where ${t.name} finishes in Group ${g}</h3>
+    <div class="dist">
+      ${seg("p1",t.p1,"Win group")}
+      ${seg("p2",t.p2,"Runner-up")}
+      ${seg("p3q",t.p3q,"3rd & advance")}
+      ${seg("p3e",t.p3e,"3rd & out")}
+      ${seg("p4",t.p4,"4th")}
+    </div>
+    <div class="dist-key">
+      <span><i style="background:#00533F"></i>1st ${pct(t.p1||0)}</span>
+      <span><i style="background:#2f8a6c"></i>2nd ${pct(t.p2||0)}</span>
+      <span><i style="background:#7cb39c"></i>3rd → advance ${pct(t.p3q||0)}</span>
+      <span><i style="background:#c79bb0"></i>3rd → out ${pct(t.p3e||0)}</span>
+      <span><i style="background:#9a4d76"></i>4th ${pct(t.p4||0)}</span>
+    </div>
+  </div>`;
+main.insertAdjacentHTML("beforeend", distHtml);
+
+/* ---------- deep-run odds ---------- */
+function oddsRow(label,p){ return `<div class="oddsbar" style="margin:8px 0">
+  <div style="width:130px;font-size:13px">${label}</div>
+  <div class="bar-track"><div class="bar-fill" style="width:${Math.max(1.5,p*100)}%"></div></div>
+  <div class="bar-val">${pct(p)}</div></div>`; }
+main.insertAdjacentHTML("beforeend", `
+  <div class="panel">
+    <h3>Run to the trophy</h3>
+    ${oddsRow("Round of 32", t.mk)}
+    ${oddsRow("Round of 16", t.r16)}
+    ${oddsRow("Quarterfinal", t.qf)}
+    ${oddsRow("Semifinal", t.sf)}
+    ${oddsRow("Final", t.fi)}
+    ${oddsRow("Champion", t.ch)}
+  </div>`);
+
+/* ---------- projected path to the Final ---------- */
+const BR = (window.FEED && FEED.bracket) || {};
+const KOmap = {}; WC.KNOCKOUTS.forEach(k => KOmap[k[0]] = { num:k[0], round:k[1], loc:k[2], t1:k[3], t2:k[4], date:k[5] });
+const parentOf = {}, childrenOf = {};
+WC.KNOCKOUTS.forEach(k => {
+  childrenOf[k[0]] = [];
+  [k[3], k[4]].forEach(d => { const mm = d.match(/^Match (\d+) winner$/); if (mm){ parentOf[+mm[1]] = k[0]; childrenOf[k[0]].push(+mm[1]); } });
+});
+function leafTeamOf(n, side){ const d = BR[n] && BR[n][side]; return d && d[0] ? d[0][0] : null; }
+function subtreeTeams(n){
+  if (BR[n]) return [leafTeamOf(n,"top"), leafTeamOf(n,"bottom")].filter(Boolean);
+  let out = []; (childrenOf[n]||[]).forEach(c => out = out.concat(subtreeTeams(c))); return out;
+}
+function favorite(teams, key){ let b=null; teams.forEach(s=>{const x=team(s); if(!b||(x[key]||0)>(b[key]||0)) b=x;}); return b; }
+function myR32(){
+  const cand = [];
+  Object.keys(BR).forEach(n => ["top","bottom"].forEach(side => {
+    const e = (BR[n][side]||[]).find(x => x[0] === t.s); if (e) cand.push({ num:+n, side, p:e[1] });
+  }));
+  return cand.sort((a,b)=>b.p-a.p)[0] || null;
+}
+const start = myR32();
+if (start && BR[start.num] && t.mk > 0.0001) {
+  const rounds = [
+    { name:"Round of 16", my:t.r16, key:"r16" },
+    { name:"Quarterfinal", my:t.qf, key:"qf" },
+    { name:"Semifinal", my:t.sf, key:"sf" },
+    { name:"Final", my:t.fi, key:"fi" }
+  ];
+  function stepRow(label, oppShort, oppProb, myOdds, loc, date){
+    const opp = oppShort ? `${flagSpan(oppShort)}<a class="team-name" href="team.html?team=${team(oppShort).slug}">${dispName(oppShort)}</a>
+      ${oppProb!=null?`<span class="muted small">${pct(oppProb)} likely</span>`:''}` : `<span class="muted">TBD</span>`;
+    return `<div class="path-step">
+      <div class="path-round">${label}${date?`<span class="path-date">${date}</span>`:''}</div>
+      <div class="path-opp">vs ${opp}</div>
+      <div class="path-odds"><span class="muted small">reach</span> <b>${pct(myOdds)}</b></div>
+    </div>`;
+  }
+  const oppR32 = (FEED.team[t.s] && FEED.team[t.s].opp && FEED.team[t.s].opp[0]) || null;
+  const k0 = KOmap[start.num];
+  let html = stepRow("Round of 32", oppR32 ? oppR32[0] : null, oppR32 ? oppR32[1] : null, t.mk, k0.loc, fmtDate(k0.date));
+  let cur = start.num;
+  rounds.forEach(rd => {
+    const par = parentOf[cur];
+    if (par == null) return;
+    const sib = (childrenOf[par] || []).find(c => c !== cur);
+    const fav = sib != null ? favorite(subtreeTeams(sib), rd.key) : null;
+    const kp = KOmap[par];
+    html += stepRow(rd.name, fav ? fav.s : null, null, rd.my, kp.loc, fmtDate(kp.date));
+    cur = par;
+  });
+  main.insertAdjacentHTML("beforeend", `
+    <h2 class="section-title">Projected path to the Final</h2>
+    <p class="lede" style="margin:-2px 0 12px">${t.name}'s most likely route, by who is favored to reach each round.
+      "Reach" is ${t.name}'s own chance of getting that far.</p>
+    <div class="panel path">${html}</div>`);
+}
+
+/* ---------- scenarios ---------- */
+let scen = `<div class="panel"><h3>What ${t.name} needs</h3>`;
+if (groupDone) {
+  const arr = me.pos===3 ? [3] : [me.pos];
+  if (t.mk>=.9999) scen += `<div class="scenario"><span class="tag good">Done</span>
+    <p>Group play is complete. ${t.name} finished <b>${ordinal(me.pos)}</b> and is into the Round of 32.</p></div>`;
+  else if (t.mk<=.0001) scen += `<div class="scenario"><span class="tag bad">Out</span>
+    <p>Group play is complete. ${t.name} finished <b>${ordinal(me.pos)}</b> and is eliminated.</p></div>`;
+  else scen += `<div class="scenario"><span class="tag neutral">3rd place</span>
+    <p>${t.name} finished <b>third</b> in Group ${g}. Qualification now depends on the
+      <a href="third-place.html">third-place race</a> — currently a
+      <b>${pct((t.p3q)/((t.p3q||0)+(t.p3e||1e-9)))}</b> chance of grabbing one of the eight berths.</p></div>`;
+} else if (myRemaining.length) {
+  const m = myRemaining[0];
+  const isHome = m.t1 === t.s;
+  const opp = isHome ? m.t2 : m.t1;
+  const dirs = [
+    ["Win", isHome ? "home" : "away"],
+    ["Draw", "draw"],
+    ["Lose", isHome ? "away" : "home"]
+  ];
+  scen += `<p class="small muted" style="margin:0 0 6px">Final group game:
+    ${t.name} vs ${team(opp).name} — ${fmtDay(m.date)}.</p>`;
+  dirs.forEach(([word,code]) => {
+    const places = enumerateGroupPositions(g, { [m.num]: code })[t.s];
+    const [tag,msg] = implication(places);
+    scen += `<div class="scenario"><span class="tag ${tag}">${word}</span>
+      <p><b>${placesPhrase(places)}.</b> ${msg}</p></div>`;
+  });
+} else {
+  scen += `<div class="scenario"><span class="tag neutral">Wait</span>
+    <p>${t.name} has finished its group games. Final position (${placesPhrase(groupScenarios(g)[t.s])})
+      depends on other results.</p></div>`;
+}
+scen += `</div>`;
+main.insertAdjacentHTML("beforeend", scen);
+
+/* ---------- group table ---------- */
+let gr = "";
+st.forEach(r => {
+  const tt = team(r.s);
+  const hl = r.s===t.s ? 'style="background:#fff7df"' : '';
+  const cls = tt.mk>=.9999 && r.pos<=2 ? "clinched" : (tt.mk<=.0001 ? "out":"");
+  gr += `<tr class="${cls}" ${hl}>
+    <td class="pos col-pos">${r.pos}</td>
+    <td class="t-team"><span class="team-cell">${flagSpan(r.s)}
+      <a class="team-name" href="team.html?team=${tt.slug}">${dispName(r.s)}</a></span></td>
+    <td class="col-num">${r.w}</td><td class="col-num">${r.d}</td><td class="col-num">${r.l}</td>
+    <td class="t-num col-gfa">${r.gf}:${r.ga}</td>
+    <td class="t-num col-num">${r.gd>0?"+":""}${r.gd}</td>
+    <td class="pts col-pts">${r.pts}</td></tr>`;
+});
+main.insertAdjacentHTML("beforeend", `
+  <h2 class="section-title">Group ${g} table</h2>
+  <div class="card"><table class="gtable">
+    <thead><tr><th class="col-pos"></th><th class="t-team">Team</th>
+      <th class="col-num">W</th><th class="col-num">D</th><th class="col-num">L</th>
+      <th class="col-gfa">GF:GA</th><th class="col-num">GD</th><th class="col-pts">Pts</th></tr></thead>
+    <tbody>${gr}</tbody></table></div>`);
+
+/* ---------- tiebreaker explainer ---------- */
+let tb = "";
+for (let i = 0; i < st.length - 1; i++) {
+  const a = st[i], b = st[i + 1];
+  const crit = separatingCriterion(a, b, g);
+  const isLine = (i === 1);
+  tb += `<div class="scenario">
+    <span class="tag ${isLine?'good':'neutral'}">${i+1} → ${i+2}</span>
+    <p><b>${dispName(a.s)}</b> is ahead of <b>${dispName(b.s)}</b> on <b>${crit}</b>.${
+      isLine ? ' <span class="muted">(this is the line between advancing and not)</span>' : ''}</p></div>`;
+}
+main.insertAdjacentHTML("beforeend", `
+  <div class="panel"><h3>How Group ${g} is separated${groupDone?'':' — provisional'}</h3>
+    <p class="small muted" style="margin:-4px 0 10px">FIFA order: points → goal difference → goals scored →
+      head-to-head (points, GD, goals) → fair play (fewer cards) → drawing of lots.</p>
+    ${tb}</div>`);
+
+/* ---------- matches ---------- */
+function matchRow(m){
+  const isHome = m.t1===t.s;
+  const opp = isHome ? m.t2 : m.t1;
+  const homeAway = isHome ? "vs" : "at";
+  let res = "", cls="mtag";
+  if (m.final){
+    const gf = isHome?m.g1:m.g2, ga = isHome?m.g2:m.g1;
+    const outcome = gf>ga?"W":gf<ga?"L":"D";
+    res = `<span class="pill ${outcome}">${outcome}</span> <b>${gf}–${ga}</b>`;
+  } else {
+    res = `<span class="muted">${fmtDate(m.date)} · ${fmtTime(m.date)}</span>`;
+  }
+  return `<div class="match" style="grid-template-columns:auto 1fr auto">
+    <div class="mtag">${homeAway}</div>
+    <div class="side">${flagSpan(opp)}<a class="team-name" href="team.html?team=${team(opp).slug}">${team(opp).name}</a></div>
+    <div>${res}</div></div>`;
+}
+main.insertAdjacentHTML("beforeend", `
+  <h2 class="section-title">${t.name}'s matches</h2>
+  ${myMatches.map(matchRow).join("")}`);
+
+/* ---------- rooting guide ---------- */
+const canFinishThird = t.pp.includes(3);
+const rivals = WC.TEAMS.filter(x => x.pp.includes(3) && x.s !== t.s).map(x=>x.s);
+const remainingAll = ALL_MATCHES.filter(m=>!m.final).sort((a,b)=>new Date(a.date)-new Date(b.date));
+
+if (!groupDone && (canFinishThird || t.mk<.9999) && t.mk>.0001) {
+  let guide = `<h2 class="section-title">Rooting guide</h2>`;
+  guide += `<div class="note">${
+    canFinishThird
+    ? `If ${t.name} can only manage third, the goal is to climb the
+       <a href="third-place.html">third-place table</a> and stay in the top eight. Beyond your own result,
+       you want rival third-place contenders to drop points and keep their goal difference low.`
+    : `${t.name} controls its own fate with a result in the final group game, but here is what else is still in play.`
+  }</div>`;
+
+  // own match first
+  if (myRemaining.length){
+    guide += `<div class="day-head">Your match</div>` + myMatches.filter(m=>!m.final).map(m=>{
+      const opp = m.t1===t.s?m.t2:m.t1;
+      return `<div class="match"><div class="side">${flagSpan(m.t1)}
+        <a class="team-name" href="team.html?team=${team(m.t1).slug}">${team(m.t1).name}</a></div>
+        <div class="mid"><div class="kick">${fmtTime(m.date)}</div><div class="mtag">${fmtDate(m.date)}</div></div>
+        <div class="side right"><a class="team-name" href="team.html?team=${team(m.t2).slug}">${team(m.t2).name}</a>${flagSpan(m.t2)}</div></div>`;
+    }).join("");
+  }
+
+  // other matches to watch (third-place rivals), grouped by day
+  const watch = remainingAll.filter(m => !(m.t1===t.s||m.t2===t.s) &&
+    (rivals.includes(m.t1) || rivals.includes(m.t2)));
+  if (canFinishThird && watch.length){
+    const days = {};
+    watch.forEach(m => (days[dayKey(m.date)] = days[dayKey(m.date)]||[]).push(m));
+    guide += `<div class="day-head">Third-place rivals to watch</div>`;
+    Object.keys(days).sort().forEach(k=>{
+      guide += `<div class="mtag" style="margin:10px 0 4px">${fmtDay(k+"T12:00:00Z")}</div>`;
+      days[k].forEach(m=>{
+        const r1 = rivals.includes(m.t1), r2 = rivals.includes(m.t2);
+        guide += `<div class="match"><div class="side">${flagSpan(m.t1)}
+          <a class="team-name" href="team.html?team=${team(m.t1).slug}">${team(m.t1).name}</a>
+          ${r1?'<span class="badge-grp">3rd race</span>':''}</div>
+          <div class="mid"><div class="kick">${fmtTime(m.date)}</div><div class="mtag">Grp ${m.group}</div></div>
+          <div class="side right">${r2?'<span class="badge-grp">3rd race</span>':''}
+          <a class="team-name" href="team.html?team=${team(m.t2).slug}">${team(m.t2).name}</a>${flagSpan(m.t2)}</div></div>`;
+      });
+    });
+  }
+  main.insertAdjacentHTML("beforeend", guide);
+}
+</script>
+</body>
+</html>
