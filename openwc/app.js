@@ -283,7 +283,7 @@ function renderNav(active) {
       <div class="topnav-inner">
         <a class="brand" href="index.html">
           <span class="brand-mark">★</span>
-          <span class="brand-text"><b>World Cup</b><span>2026 Tracker</span></span>
+          <span class="brand-text"><b>OpenWC</b><span>2026 Tracker</span></span>
         </a>
         <div class="nav-links">${linkHtml}</div>
         <div class="nav-divider"></div>
