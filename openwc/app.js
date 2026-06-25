@@ -269,12 +269,13 @@ function renderNav(active) {
     ["schedule.html", "Schedule"],
     ["third-place.html", "Third-place"]
   ];
-  const teamChips = ["USA", "ENG", "CAN", "GER", "ARG", "FRA", "ESP", "MEX"];
+  const teamChips = ["USA", "EGY", "KOR", "ARG"];
+  const chipLabels = { USA: "USA", KOR: "South Korea" };
   const linkHtml = links.map(([href, label]) =>
     `<a class="nav-link ${active === href ? "active" : ""}" href="${href}">${label}</a>`).join("");
   const chipHtml = teamChips.map(s => {
     const t = team(s);
-    return `<a class="nav-team" href="team.html?team=${t.slug}">${flag(t.code)} ${s === "USA" ? "USA" : t.name.split(" ")[0]}</a>`;
+    return `<a class="nav-team" href="team.html?team=${t.slug}">${flag(t.code)} ${chipLabels[s] || t.name.split(" ")[0]}</a>`;
   }).join("");
 
   document.getElementById("nav").innerHTML = `
